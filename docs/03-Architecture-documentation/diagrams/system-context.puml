@@ -1,0 +1,23 @@
+@startuml system-context
+title EduFinance – System Scope and Context
+skinparam shadowing false
+skinparam rectangle {
+  BorderColor #16213B
+}
+left to right direction
+
+actor "International student\n(before, during and after studies)" as student
+rectangle "EduFinance\n(web application)" as app #E5F0EC
+database "PostgreSQL\n(persistence)" as db #F6EEDF
+rectangle "Exchange-rate API\nopen.er-api.com\n<<external>>" as fx #F6EEDF
+
+student --> app : uses via web browser\n(HTTPS)
+app --> db : SQL (reads/writes)
+app --> fx : daily FX rates\n(HTTPS, cached 24 h)
+note bottom of fx
+  Optional dependency: when unreachable,
+  cached rates (≤ 7 days) or the seeded
+  fallback table are used and flagged
+  as "estimated" (NFR5).
+end note
+@enduml

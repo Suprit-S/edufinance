@@ -1,0 +1,29 @@
+@startuml deployment-diagram
+title EduFinance – Deployment View (Docker Compose on a cloud VM)
+skinparam shadowing false
+
+node "User device" {
+  artifact "Web browser" as browser
+}
+
+node "Cloud VM (Azure for Students, Ubuntu)" <<device>> {
+  node "Docker Engine" <<execution environment>> {
+    node "frontend container\nnginx 1.27" as fe {
+      artifact "React build (static files)"
+    }
+    node "backend container\npython 3.12 + gunicorn" as be {
+      artifact "Flask app (wsgi:app)"
+    }
+    node "db container\npostgres 16" as dbc {
+      database "edufinance DB" as dbvol
+    }
+  }
+}
+
+cloud "Exchange-rate API" as fx
+
+browser --> fe : HTTPS :443\n(reverse proxy, Sprint 3)
+fe --> be : HTTP :5000 /api/*
+be --> dbvol : TCP :5432
+be --> fx : HTTPS
+@enduml

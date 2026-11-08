@@ -3,7 +3,26 @@
 All notable changes are documented here. Format: [Keep a Changelog](https://keepachangelog.com/),
 versioning: [Semantic Versioning](https://semver.org/).
 
-## [Unreleased] – Sprint 1
+## [0.1.0] – Sprint 1: foundation
+
+### Added
+- Registration, login, logout with token revocation, password change, profile edit (`/api/auth/*`, `/api/me`).
+- Life phases: system phases from profile dates, custom phases, automatic and manual assignment,
+  re-assignment when dates change (`/api/phases`).
+- Wallets with balances, archive, delete-if-empty (`/api/wallets`).
+- System and custom categories (`/api/categories`).
+- Transactions with frozen base/home values and rate source; filters, search, pagination
+  (`/api/transactions`).
+- Exchange-rate service: USD-based daily cache, provider, 7-day stale cache, fallback table;
+  `/api/fx/rate` for forms.
+- Frontend: login, registration, wallets, wallet detail, transactions, profile & phases, dashboard
+  (phase and wallets); modal dialogs; phone layout.
+- 41 new backend tests, 8 new frontend tests; test-case catalogue updated.
+
+### Changed
+- Development JWT secret lengthened to ≥ 32 bytes (HMAC recommendation).
+
+## [0.0.1] – Skeleton
 
 ### Added
 - Project skeleton: Docker Compose (frontend, backend, db), GitHub Actions CI.

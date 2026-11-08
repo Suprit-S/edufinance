@@ -56,7 +56,7 @@ documentation:
 | Retrospective | 20 min at sprint end | 1–3 improvements for the next sprint |
 
 **Artefacts.** Product backlog (§4), sprint backlog (§6), increment (tagged Git release),
-[sprint notes](sprint-notes.md), burndown (§7).
+[sprint notes](sprint-notes.md).
 
 **Definition of Done (DoD).** A backlog item is *done* when:
 
@@ -70,14 +70,14 @@ documentation:
 
 ## 3. Milestones
 
-| Milestone | Date | Content |
-|---|---|---|
-| M1 – Concept approved | 27 Jul 2026 | Phase 1 submitted (24 Jul) and accepted by the tutor |
-| M2 – Release v0.1.0 | 12 Nov 2026 | Skeleton + Sprint 1: accounts, phases, wallets, transactions, FX |
-| M3 – Release v0.2.0 | 19 Nov 2026 | Sprint 2: remittances, monthly plan, target, loans, runway |
-| M4 – Release v0.3.0 | 26 Nov 2026 | Sprint 3: reports, dashboard, demo data, deployment |
-| M5 – Phase 2 submission | 28 Nov 2026 | Composite PDF + written explanation |
-| M6 – Phase 3 submission | after tutor feedback | Final product, abstract, ZIP folder, v1.0.0 |
+| Milestone | Content |
+|---|---|
+| M1 – Concept approved | Phase 1 submitted and accepted by the tutor |
+| M2 – Release v0.1.0 | Skeleton + Sprint 1: accounts, phases, wallets, transactions, FX |
+| M3 – Release v0.2.0 | Sprint 2: remittances, monthly plan, target, loans, runway |
+| M4 – Release v0.3.0 | Sprint 3: reports, dashboard, demo data, deployment |
+| M5 – Phase 2 submission | Composite PDF + written explanation |
+| M6 – Phase 3 submission | Final product, abstract, ZIP folder, v1.0.0 (after tutor feedback) |
 
 ## 4. Product backlog (user stories)
 
@@ -126,31 +126,20 @@ Acceptance criteria for every story are listed in [requirements.md](../02-Requir
 
 ## 6. Sprint plan
 
-Sprints are one week long (time-box). Capacity is about 45 hours per sprint.
+Sprints are time-boxed to one week each and run one after the other. Capacity is about 45 hours per sprint.
 
-| Sprint | Dates | Sprint goal | Work packages | Planned h |
+| Sprint | Length | Sprint goal | Work packages | Planned h |
 |---|---|---|---|---|
-| Sprint 0 | 1–24 Jul 2026 | Concept, requirements and architecture approved | Phase 1 | done |
-| Sprint 1 | 6–12 Nov 2026 | A student can register, sees her life phases, and logs income and expenses in any currency with frozen rates. | WP1–WP4 | 52 |
-| Sprint 2 | 13–19 Nov 2026 | Money flows work end-to-end: transfers, monthly target, loans with part-payments and wallet runway. | WP5–WP8 | 41 |
-| Sprint 3 | 20–26 Nov 2026 | Insight and release: reports, dashboard, demo data, cloud deployment and Phase 2 documents. | WP9–WP12 | 44 |
-| Sprint 4–5 | after feedback | Polish, technical debt, final abstract (Phase 3) | – | – |
+| Sprint 0 | Phase 1 | Concept, requirements and architecture approved | Phase 1 | done |
+| Sprint 1 | 1 week | A student can register, sees her life phases, and logs income and expenses in any currency with frozen rates. | WP1–WP4 | 52 |
+| Sprint 2 | 1 week | Money flows work end-to-end: transfers, monthly target, loans with part-payments and wallet runway. | WP5–WP8 | 41 |
+| Sprint 3 | 1 week | Insight and release: reports, dashboard, demo data, cloud deployment and Phase 2 documents. | WP9–WP12 | 44 |
+| Sprint 4–5 | after Phase 2 feedback | Polish, technical debt, final abstract (Phase 3) | – | – |
 
 Sprint 1 is above capacity because WP1 (document revision) runs in parallel; if needed, the
 "custom category" part of WP4 moves to Sprint 2.
 
-## 7. Progress tracking (burndown)
-
-Remaining story points are recorded at the end of each sprint and plotted in the Phase 2 PDF.
-
-| Point in time | Remaining SP (of 80) |
-|---|---|
-| Start Sprint 1 (6 Nov) | 80 |
-| End Sprint 1 (12 Nov) | *to be filled* |
-| End Sprint 2 (19 Nov) | *to be filled* |
-| End Sprint 3 (26 Nov) | *to be filled* |
-
-## 8. Risks
+## 7. Risks
 
 | Risk | Likelihood | Impact | Mitigation |
 |---|---|---|---|
@@ -161,7 +150,7 @@ Remaining story points are recorded at the end of each sprint and plotted in the
 | Cloud credit or host limits | Low | High | Small VM, budget alert, Docker Compose allows moving to another host in minutes |
 | Data privacy (financial data) | Medium | High | Hashed passwords, JWT on every endpoint, per-user data isolation tests, data export/delete |
 
-## 9. Version and release control
+## 8. Version and release control
 
 * Git repository on GitHub (public), branch `main`; conventional commits (`feat:`, `fix:`, `docs:`, `test:`).
 * Every sprint ends with a tagged release (`v0.1.0`, `v0.2.0`, `v0.3.0`; final `v1.0.0`) and a

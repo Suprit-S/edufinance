@@ -1,60 +1,94 @@
-import { useEffect, useState } from 'react'
-import api from '../api/client'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../auth/useAuth'
 import ComingSoon from '../components/ComingSoon'
 import PageHeader from '../components/PageHeader'
+import { formatDate, formatMoney } from '../lib/format'
+import { useFinanceData } from '../lib/useFinanceData'
 
 /**
- * Skeleton dashboard: shows that frontend, API and database are connected.
- * The real dashboard (balances, target, runway, loans) arrives in Sprint 3.
+ * Sprint 1 dashboard: greeting, current life phase and wallet balances.
+ * The full dashboard (target, runway, loans, charts) arrives in Sprint 3.
  */
 export default function DashboardPage() {
-  const [status, setStatus] = useState({ state: 'loading' })
-
-  useEffect(() => {
-    let cancelled = false
-    Promise.all([api.get('/health'), api.get('/currencies')])
-      .then(([health, currencies]) => {
-        if (!cancelled)
-          setStatus({ state: 'ok', db: health.data.database, currencies: currencies.data.length })
-      })
-      .catch((err) => !cancelled && setStatus({ state: 'error', message: err.message }))
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  const { user } = useAuth()
+  const { wallets, loading } = useFinanceData()
+  const current = user.phases.find((p) => p.is_current)
+  const active = wallets.filter((w) => !w.is_archived)
+  const firstName = user.full_name.split(' ')[0]
 
   return (
     <>
       <PageHeader
         eyebrow="Overview"
-        title="Welcome to EduFinance"
-        lead="From your first university application to your last loan EMI: one place for every euro and rupee of your study-abroad journey."
+        title={`Hello, ${firstName}`}
+        lead="From your first university application to your last loan EMI: one place for every cost of your journey."
+        actions={
+          <Link className="btn btn-primary" to="/transactions">
+            Add or find transactions
+          </Link>
+        }
       />
 
-      <section className="card" aria-live="polite">
-        <h2>System status</h2>
-        {status.state === 'loading' && <p className="status-line">Checking connection…</p>}
-        {status.state === 'ok' && (
-          <p className="status-line">
-            <span className="badge badge-healthy">Connected</span>
-            API and database are running · {status.currencies} currencies available
+      <div className="grid grid-2">
+        <section className="card">
+          <p className="stat-label">Current life phase</p>
+          <p className="stat-value phase-title">{current ? current.name : '–'}</p>
+          {current && (
+            <>
+              <p className="stat-sub">
+                {formatDate(current.start_date)} –{' '}
+                {current.end_date ? formatDate(current.end_date) : 'open-ended'}
+              </p>
+              {current.progress_pct !== null && (
+                <div
+                  className="progress"
+                  role="progressbar"
+                  aria-label="Phase progress"
+                  aria-valuenow={current.progress_pct}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                >
+                  <span style={{ width: `${current.progress_pct}%` }} />
+                </div>
+              )}
+              {current.progress_pct !== null && (
+                <p className="stat-sub">{current.progress_pct}% of this phase completed</p>
+              )}
+            </>
+          )}
+          <p className="stat-sub">
+            <Link to="/profile">See all phases</Link>
           </p>
-        )}
-        {status.state === 'error' && (
-          <p className="status-line">
-            <span className="badge badge-critical">Offline</span>
-            {status.message}
-          </p>
-        )}
-      </section>
+        </section>
+
+        <section className="card">
+          <p className="stat-label">Wallets</p>
+          {loading ? (
+            <p className="status-line">Loading…</p>
+          ) : active.length === 0 ? (
+            <p className="stat-sub">
+              No wallets yet. <Link to="/wallets">Add your first wallet</Link>.
+            </p>
+          ) : (
+            <ul className="mini-list">
+              {active.map((w) => (
+                <li key={w.id}>
+                  <Link to={`/wallets/${w.id}`}>{w.name}</Link>
+                  <span className="money">{formatMoney(w.balance, w.currency_code)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
 
       <ComingSoon
         sprint={3}
         features={[
-          'Total balance across all wallets in your base currency',
+          `Total balance across all wallets in ${user.base_currency}`,
           'Earned this month vs. minimum target',
           'Low-funds alerts and wallet runway',
-          'Loan summary and current life phase',
+          'Loan summary and 30-day spending chart',
         ]}
       />
     </>

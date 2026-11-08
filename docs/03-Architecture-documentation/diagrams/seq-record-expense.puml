@@ -1,0 +1,46 @@
+@startuml seq-record-expense
+title Record a foreign-currency expense (FR-13 – FR-16)
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+autonumber
+
+actor Student
+participant "TransactionForm\n(React)" as UI
+participant "transactions\nblueprint" as API
+participant "transaction_service" as TS
+participant "phase_service" as PS
+participant "fx_service" as FX
+database "PostgreSQL" as DB
+participant "Exchange-rate API" as EXT
+
+Student -> UI : choose INR wallet, date
+UI -> API : GET /fx/rate?from=INR&to=EUR&date=d
+API -> FX : get_rate(INR, EUR, d)
+FX -> DB : USD rates for date d?
+alt not cached and d is recent
+  FX -> EXT : GET latest/USD
+  EXT --> FX : rates
+  FX -> DB : store rates (today)
+end
+alt no rate within 7 days
+  FX -> DB : fallback table
+end
+FX --> API : rate, source, estimated
+API --> UI : 200 {rate, estimated}
+UI --> Student : rate pre-filled (editable)
+
+Student -> UI : amount ₹2,000, category, Save
+UI -> API : POST /transactions\n(rate_to_base only if changed)
+API -> API : validate (marshmallow) → 422 on error
+API -> TS : create_transaction(user, data)
+TS -> DB : wallet, category belong to user? (else 404)
+TS -> PS : assign_phase(user, date)
+PS --> TS : phase_id (shortest matching phase)
+TS -> FX : get_rate(INR → EUR / INR → INR)
+FX --> TS : rates (LIVE / FALLBACK / IDENTITY)
+TS -> TS : amount_base, amount_home\n(amount × frozen rates, half-up)
+TS -> DB : INSERT transaction
+API -> DB : COMMIT
+API --> UI : 201 transaction
+UI --> Student : list + balance updated
+@enduml

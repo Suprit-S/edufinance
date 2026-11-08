@@ -14,17 +14,7 @@ export const PLACEHOLDERS = {
       'Minimum monthly target in your base currency',
     ],
   },
-  wallets: {
-    eyebrow: 'Wallets',
-    title: 'Your wallets',
-    lead: 'One wallet per account or purpose: home account, daily spending, savings, proof of funds.',
-    sprint: 1,
-    features: [
-      'Wallets in any currency with opening balance',
-      'Income and expense transactions with categories and life phases',
-      'Exchange rate frozen on every transaction',
-    ],
-  },
+
   remittances: {
     eyebrow: 'Remittances',
     title: 'Money sent and received',
@@ -69,15 +59,5 @@ export const PLACEHOLDERS = {
       'Net-worth and loan payoff timelines',
     ],
   },
-  profile: {
-    eyebrow: 'Profile',
-    title: 'Profile & life phases',
-    lead: 'Your currencies, study dates and the phases of your journey.',
-    sprint: 1,
-    features: [
-      'Registration and login',
-      'Home and base currency, destination country, study dates',
-      'Life phases created automatically and editable',
-    ],
-  },
+
 }

@@ -1,6 +1,6 @@
 # ADR-0001: Technology stack – React + Flask + PostgreSQL
 
-**Status:** Accepted (Phase 1, confirmed 06 Nov 2026)
+**Status:** Accepted (Phase 1, confirmed in Sprint 1)
 
 ## Context
 A single developer must build a browser-based, multi-currency finance application with exact

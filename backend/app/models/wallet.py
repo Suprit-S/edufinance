@@ -136,3 +136,5 @@ class Transaction(UUIDPkMixin, TimestampMixin, Base):
 
     wallet: Mapped[Wallet] = relationship(back_populates="transactions")
     remittance: Mapped[Remittance | None] = relationship(back_populates="transactions")
+    category: Mapped["Category | None"] = relationship()  # noqa: F821
+    phase: Mapped["LifePhase"] = relationship()  # noqa: F821

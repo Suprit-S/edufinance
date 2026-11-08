@@ -21,3 +21,13 @@ describe('normaliseError (TC-F05)', () => {
     expect(normaliseError(new Error('fail')).code).toBe('NETWORK_ERROR')
   })
 })
+
+describe('fieldErrors (TC-F05b)', () => {
+  it('maps marshmallow details to one message per field', async () => {
+    const { fieldErrors } = await import('./client')
+    expect(
+      fieldErrors({ details: { amount: ['Not a valid number.', 'x'], start_date: ['Bad'] } }),
+    ).toEqual({ amount: 'Not a valid number.', start_date: 'Bad' })
+    expect(fieldErrors({ details: null })).toEqual({})
+  })
+})

@@ -38,3 +38,15 @@ Past reports must not change when market rates move.
 * Reports in base currency are stable and reproducible.
 * Changing the base currency later does not convert history (documented as technical debt TD-03).
 * The app works offline from the provider; estimated values are labelled.
+
+## Addendum (Sprint 1)
+* **Storage:** rates are cached as *1 USD = x currency* per day; any pair is a cross rate
+  (`usd[B] / usd[A]`). One provider call per day serves every pair.
+* **Back-dated entries:** the free provider only returns today's rates, so an entry dated more than
+  7 days ago gets the fallback table rate and is flagged *estimated*. The form shows this and
+  invites the user to type the real rate (technical debt TD-09).
+* **Rate source of a transaction:** each transaction has two rates (to base, to home). Its single
+  `rate_source` is the least certain of both: FALLBACK > USER > LIVE > IDENTITY, so an estimated
+  part is never hidden.
+* **Edits:** changing amount or date keeps the frozen rates; only an explicitly entered new rate
+  replaces one.

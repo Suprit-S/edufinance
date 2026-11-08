@@ -24,3 +24,11 @@ Option 2.
 ## Consequences
 Phase reports are a simple `GROUP BY phase_id` (fast, NFR-01). Re-assignment costs one UPDATE
 when phase dates change, which is rare.
+
+## Addendum (Sprint 1)
+* The dates of system phases are edited **only through the profile** (planning start, arrival,
+  settling-in days, study dates). The profile is the single source of truth; editing a system
+  phase directly would let the two drift apart. System phases can still be renamed.
+* A date outside every phase belongs to the closest phase that started before it; a date before
+  all phases belongs to the first phase (e.g. an IELTS fee paid before the planning start).
+* Deleting a custom phase re-assigns its transactions by date, including manually assigned ones.

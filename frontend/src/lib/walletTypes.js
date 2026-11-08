@@ -1,0 +1,1 @@
+export const WALLET_TYPES = ['BANK', 'CASH', 'SAVINGS', 'PROOF_OF_FUNDS']

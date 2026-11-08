@@ -31,7 +31,20 @@ def create_app(config_name: str = "default") -> Flask:
 def _register_jwt_callbacks() -> None:
     """Turn JWT problems into the standard error body (401) and reject
     tokens revoked on logout."""
-    from .models import RevokedToken
+    import uuid
+
+    from .models import RevokedToken, User
+
+    @jwt.user_lookup_loader
+    def load_user(_header, payload):
+        try:
+            return db.session.get(User, uuid.UUID(payload["sub"]))
+        except ValueError:
+            return None
+
+    @jwt.user_lookup_error_loader
+    def user_not_found(_header, _payload):
+        return error_body("UNAUTHORIZED", "Your account no longer exists."), 401
 
     @jwt.token_in_blocklist_loader
     def is_revoked(_header, payload):

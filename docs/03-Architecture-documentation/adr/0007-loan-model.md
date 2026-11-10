@@ -25,3 +25,18 @@ still differ from the bank statement.
 ## Consequences
 Simple, always matches the bank after a correction. The app does not predict moratorium interest
 (documented as technical debt TD-04).
+
+## Addendum (Sprint 2)
+* **Wallet currency:** a payment can only be booked from a wallet in the loan currency. Paying an
+  INR loan from a EUR account is recorded as a remittance to the INR wallet first – this keeps the
+  real exchange rate in one place.
+* **Payment order:** payments must be recorded in date order, because each payment's split is
+  calculated from the balance left by the previous one.
+* **Small payments:** a payment smaller than the month's interest is all interest; the balance does
+  not change.
+* **Final payment:** an EMI may be at most balance + this month's interest; the error message names
+  that amount.
+* **Wallet expenses of payments** are managed by the loan (read-only in the transaction API). If
+  the loan is deleted, these expenses stay as normal transactions – the money was really paid.
+* **Closing:** when the balance reaches 0 the loan is CLOSED and its EMI plan line ends in the
+  month of the last payment; correcting the outstanding amount above 0 re-opens it.

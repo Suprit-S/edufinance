@@ -110,3 +110,27 @@
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
   color-scheme: dark;
 }
+
+/* Chart roles (validated categorical slots 1-2 of the data-viz reference palette). */
+:root {
+  --series-1: #2a78d6; /* earned / balance */
+  --series-2: #eb6834; /* spent */
+  --chart-grid: #e6e8ee;
+  --chart-ref: #5b6478; /* target reference line */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --chart-grid: #2a3452;
+    --chart-ref: #a5adc0;
+  }
+}
+
+:root[data-theme='dark'] {
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --chart-grid: #2a3452;
+  --chart-ref: #a5adc0;
+}

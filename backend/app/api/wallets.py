@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request
 
 from app.extensions import db
 from app.models import CategoryKind
-from app.services import category_service, wallet_service
+from app.services import category_service, runway_service, wallet_service
 
 from .common import load, me, require_auth, wallet_dict
 from .schemas import CategorySchema, WalletSchema
@@ -17,9 +17,18 @@ bp.before_request(require_auth)
 def list_wallets():
     user = me()
     balances = wallet_service.balances(user.id)
+    runways = runway_service.wallet_runways(user.id)
     return jsonify(
-        [wallet_dict(w, balances.get(w.id)) for w in wallet_service.list_wallets(user.id)]
+        [
+            {**wallet_dict(w, balances.get(w.id)), "runway": _runway(runways, w)}
+            for w in wallet_service.list_wallets(user.id)
+        ]
     )
+
+
+def _runway(runways, wallet):
+    runway = runways.get(wallet.id)
+    return runway.to_dict() if runway and not wallet.is_archived else None
 
 
 @bp.post("/wallets")
@@ -33,7 +42,13 @@ def create_wallet():
 def get_wallet(wallet_id):
     user = me()
     wallet = wallet_service.get_wallet(user.id, wallet_id)
-    return jsonify(wallet_dict(wallet, wallet_service.balances(user.id).get(wallet.id)))
+    runways = runway_service.wallet_runways(user.id)
+    return jsonify(
+        {
+            **wallet_dict(wallet, wallet_service.balances(user.id).get(wallet.id)),
+            "runway": _runway(runways, wallet),
+        }
+    )
 
 
 @bp.patch("/wallets/<uuid:wallet_id>")

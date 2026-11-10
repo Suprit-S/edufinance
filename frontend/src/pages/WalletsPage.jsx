@@ -4,6 +4,7 @@ import { useAuth } from '../auth/useAuth'
 import ErrorBanner from '../components/ErrorBanner'
 import Modal from '../components/Modal'
 import PageHeader from '../components/PageHeader'
+import RunwayBadge from '../components/RunwayBadge'
 import WalletForm from '../components/WalletForm'
 import { humanize } from '../lib/dates'
 import { formatMoney } from '../lib/format'
@@ -94,6 +95,11 @@ function WalletCard({ wallet }) {
       <h3>{wallet.name}</h3>
       <p className={`stat-value ${negative ? 'neg' : ''}`}>{formatMoney(wallet.balance, wallet.currency_code)}</p>
       <p className="stat-sub">Current balance</p>
+      {wallet.runway && (
+        <p>
+          <RunwayBadge runway={wallet.runway} />
+        </p>
+      )}
     </Link>
   )
 }

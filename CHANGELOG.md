@@ -3,6 +3,24 @@
 All notable changes are documented here. Format: [Keep a Changelog](https://keepachangelog.com/),
 versioning: [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] – Sprint 2: money flows
+
+### Added
+- Remittances between own wallets, from outside and to outside, with effective rate, market rate,
+  hidden cost and fees (`/api/remittances`). Same-currency transfers between own wallets (FR-18).
+- Monthly Plan with automatic, locked EMI lines and the minimum monthly target (`/api/plan`).
+- Target to Earn with earnings by source, plan vs. actual and a six-month chart (`/api/target`).
+- Loan Planner: loans, EMI and part-payments, payoff forecast and schedule, interest saved, undo of
+  the latest payment, part-payment affordability check (`/api/loans`).
+- Runway and burn rate per wallet (`runway` in `/api/wallets`), low-funds alert on the dashboard.
+- Pages: Remittances, Monthly Plan, Target to Earn, Loans, Loan detail; charts with table view;
+  chart pages are loaded on demand.
+- ADR-0011; sequence diagrams for "record remittance" and "record part-payment".
+
+### Changed
+- Every API error rolls back the database session (no half-saved changes).
+- Wide tables scroll inside their card on phones.
+
 ## [0.1.0] – Sprint 1: foundation
 
 ### Added

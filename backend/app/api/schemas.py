@@ -212,3 +212,73 @@ class RateQuerySchema(Schema):
     from_ = CurrencyField(required=True, data_key="from")
     to = CurrencyField(required=True)
     date = fields.Date()
+
+
+# ---------------------------------------------------------------------------
+# Remittances (Sprint 2)
+# ---------------------------------------------------------------------------
+class RemittanceSchema(Schema):
+    from_wallet_id = fields.UUID(allow_none=True, load_default=None)
+    to_wallet_id = fields.UUID(allow_none=True, load_default=None)
+    sent_amount = Amount(required=True)
+    sent_currency = CurrencyField(allow_none=True, load_default=None)
+    received_amount = Amount(required=True)
+    received_currency = CurrencyField(allow_none=True, load_default=None)
+    fee_amount = fields.Decimal(
+        places=2,
+        rounding=ROUND_HALF_UP,
+        as_string=True,
+        allow_none=True,
+        load_default=None,
+        validate=validate.Range(min=0, max=10**9),
+    )
+    provider = fields.String(allow_none=True, validate=validate.Length(max=60))
+    remit_date = fields.Date(required=True)
+    category_id = fields.UUID(allow_none=True, load_default=None)
+    note = fields.String(allow_none=True, validate=NOTE)
+
+
+# ---------------------------------------------------------------------------
+# Monthly plan
+# ---------------------------------------------------------------------------
+class PlanItemSchema(Schema):
+    name = fields.String(required=True, validate=NAME)
+    category_id = fields.UUID(required=True)
+    amount = Amount(required=True)
+    currency_code = CurrencyField(required=True)
+    valid_from = fields.Date(required=True)
+    valid_to = fields.Date(allow_none=True, load_default=None)
+    phase_id = fields.UUID(allow_none=True, load_default=None)
+
+
+# ---------------------------------------------------------------------------
+# Loans
+# ---------------------------------------------------------------------------
+class LoanSchema(Schema):
+    name = fields.String(required=True, validate=validate.Length(min=1, max=80))
+    lender = fields.String(allow_none=True, validate=validate.Length(max=80))
+    currency_code = CurrencyField(required=True)
+    annual_rate_pct = fields.Decimal(
+        required=True, places=3, as_string=True, validate=validate.Range(min=0, max=99.999)
+    )
+    sanctioned_amount = Amount(required=True)
+    outstanding_amount = fields.Decimal(
+        required=True,
+        places=2,
+        rounding=ROUND_HALF_UP,
+        as_string=True,
+        validate=validate.Range(min=0, max=10**11),
+    )
+    emi_amount = Amount(required=True)
+    emi_start_date = fields.Date(allow_none=True, load_default=None)
+    min_part_payment = Amount(allow_none=True, load_default=None)
+    default_wallet_id = fields.UUID(allow_none=True, load_default=None)
+    note = fields.String(allow_none=True, validate=NOTE)
+
+
+class LoanPaymentSchema(Schema):
+    payment_type = fields.String(required=True, validate=validate.OneOf(["EMI", "PART_PAYMENT"]))
+    amount = Amount(required=True)
+    paid_on = fields.Date(required=True)
+    wallet_id = fields.UUID(allow_none=True)
+    note = fields.String(allow_none=True, validate=NOTE)

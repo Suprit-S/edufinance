@@ -67,7 +67,43 @@ case of a remittance (same data, sent = received).
   transfer uses) in an ADR *before* coding.
 
 ## Sprint 2 – Money flows
-*to be filled*
+
+**Goal:** Money flows work end-to-end: transfers, monthly target, loans with part-payments and
+wallet runway.
+
+### Increment
+- **Remittances:** three directions (between own wallets, from outside, to outside) plus
+  same-currency transfers (FR-18, carried over from Sprint 1); effective rate from the amounts;
+  market rate and hidden cost incl. fees; linked, read-only transactions (ADR-0011).
+- **Monthly Plan:** recurring items with currency, validity and optional phase; every loan's EMI is
+  a locked plan line; minimum monthly target in base currency.
+- **Target to Earn:** target, earned, spent, still to earn / surplus, earnings by source, plan vs.
+  actual per line, six-month chart with a table view.
+- **Loan Planner:** loans in any currency, user-correctable outstanding amount, EMI and
+  part-payment recording (optionally from a wallet), frozen interest/principal split, payoff
+  forecast and schedule, interest and EMIs saved, undo of the latest payment, and the
+  part-payment affordability check (CR-04).
+- **Runway:** burn rate, days left and status per wallet; low-funds alert on the dashboard.
+- **Tests:** 31 new backend tests (88 in total, service coverage 96 %), 9 new frontend tests
+  (28 in total), scripted browser run TC-E2E02.
+
+### Review
+Sprint goal **met**. Accepted stories: US-07, US-08, US-09, US-10, US-11, US-12 (29 story points).
+
+**Demo observations**
+- A part-payment of ₹20,000 on the SBI loan moved the debt-free month by two months and saved
+  ₹6,860.63 interest – the strongest "aha" of the demo.
+- When a transfer got a *better* rate than the (estimated) market rate, the hidden cost was
+  negative and looked like an error → now shown as "€x better".
+- The plan's EMI line first counted part-payments as "actual" → changed to EMIs only (TC-TE04).
+
+### Retrospective
+- *Went well:* deciding the transaction model of remittances in an ADR before coding avoided
+  rework; concrete numbers in test names made the review fast.
+- *Went badly:* a hidden accessibility label widened three pages on phones (360 px) – found only
+  by the browser check. A failed request could leave half-changed data in the session.
+- *Improve in Sprint 3:* every API error now rolls back the database session; the 360 px check runs
+  on every page automatically in the browser script.
 
 ## Sprint 3 – Insight and release
 *to be filled*

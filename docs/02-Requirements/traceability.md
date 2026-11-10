@@ -12,16 +12,16 @@ verify it. Updated at the end of every sprint. *Planned* modules are named as in
 | FR-05 | US-01 | `api/profile.py`, `auth_service.update_profile` | `ProfilePage` | TC-PH04 | 1 ✅ |
 | FR-07 – FR-10 | US-03 | `services/phase_service.py`, `api/profile.py` | `ProfilePage` | TC-PH01–PH08 | 1 ✅ |
 | FR-11, FR-17 | US-04 | `api/wallets.py`, `services/wallet_service.py` | `WalletsPage`, `WalletDetailPage`, `WalletForm` | TC-W01–W03 | 1 ✅ |
-| FR-18 | US-07 | `services/remittance_service.py` | Remittances | TC-R0x | 2 |
+| FR-18 | US-07 | `services/remittance_service.py` | `RemittancesPage` | TC-R05 | 2 ✅ |
 | FR-12, FR-19 | US-05 | `seed/master_data.py`, `services/category_service.py`, `api/schemas.py` | `TransactionForm` | TC-S02, TC-S05, TC-C01, TC-A03, TC-T04 | 1 ✅ |
 | FR-13 | US-05 | `api/transactions.py`, `services/transaction_service.py` | `TransactionsPage`, `TransactionForm`, `TransactionList` | TC-T04, TC-T08, TC-F06 | 1 ✅ |
 | FR-14 – FR-16 | US-06 | `services/fx_service.py`, `services/transaction_service.py`, `services/money.py` | `TransactionForm` (rate pre-fill) | TC-M04, TC-M05, TC-T01–T03, TC-T05–T07, TC-FX01–FX06, TC-F07 | 1 ✅ |
-| FR-20 – FR-22 | US-07 | `services/remittance_service` | Remittances | TC-R01–R03 | 2 |
-| FR-23 – FR-25 | US-08 | `services/plan_service` | Monthly Plan | TC-PL01, TC-PL02 | 2 |
-| FR-26, FR-27 | US-09 | `services/plan_service` | Target to Earn | TC-S06, TC-TE01, TC-TE02 | 2 |
-| FR-28 – FR-33 | US-10 | `services/loan_service` | Loan Planner | TC-L01–L05 | 2 |
-| FR-34 | US-11 | `services/loan_service.affordability` | Loan Planner | TC-L06, TC-L07 | 2 |
-| FR-35, FR-36 | US-12 | `services/runway_service` | Wallets, Dashboard | TC-RW01, TC-RW02 | 2 |
+| FR-20 – FR-22 | US-07 | `services/remittance_service.py`, `api/remittances.py` | `RemittancesPage`, `RemittanceForm` | TC-R01–R07, TC-F13 | 2 ✅ |
+| FR-23 – FR-25 | US-08 | `services/plan_service.py`, `api/plan.py` | `PlanPage` | TC-PL01–PL05 | 2 ✅ |
+| FR-26, FR-27 | US-09 | `plan_service.target_to_earn`, `month_totals` | `TargetPage`, `TargetHistoryChart` | TC-S06, TC-TE01–TE04, TC-R03 | 2 ✅ |
+| FR-28 – FR-33 | US-10 | `services/loan_service.py`, `api/loans.py` | `LoansPage`, `LoanDetailPage`, `LoanForm` | TC-L01–L05, TC-L08, TC-L09 | 2 ✅ |
+| FR-34 | US-11 | `loan_service.affordability`, `affordability_verdict` | `AffordabilityCard` | TC-L06, TC-L07, TC-L10, TC-F11 | 2 ✅ |
+| FR-35, FR-36 | US-12 | `services/runway_service.py`, `api/wallets.py` | `RunwayBadge`, Wallets, Dashboard alert | TC-RW01–RW04, TC-F12 | 2 ✅ |
 | FR-37 – FR-40 | US-13 | `services/report_service` | Reports | TC-RP01–RP03 | 3 |
 | FR-41 | US-14 | `api/dashboard` | Dashboard | TC-P01 | 3 |
 | FR-42 | US-15 | `api/account` | Profile | TC-EX01, TC-EX02 | 3 |

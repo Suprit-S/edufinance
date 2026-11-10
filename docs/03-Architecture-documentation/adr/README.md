@@ -15,3 +15,4 @@ its consequences (format after M. Nygard). Status: *Accepted*, *Superseded* or *
 | [0008](0008-earned-target-and-affordability.md) | What counts as "earned", EMIs in the target, affordability | Accepted |
 | [0009](0009-authentication.md) | Authentication with short-lived JWT and revocation list | Accepted |
 | [0010](0010-hosting.md) | Hosting on a cloud VM with Docker Compose | Accepted |
+| [0011](0011-remittance-transactions.md) | How a remittance becomes transactions | Accepted |

@@ -6,6 +6,7 @@ import ConfirmDialog from '../components/ConfirmDialog'
 import ErrorBanner from '../components/ErrorBanner'
 import Modal from '../components/Modal'
 import PageHeader from '../components/PageHeader'
+import RunwayBadge from '../components/RunwayBadge'
 import TransactionForm from '../components/TransactionForm'
 import TransactionList from '../components/TransactionList'
 import WalletForm from '../components/WalletForm'
@@ -101,9 +102,24 @@ export default function WalletDetailPage() {
           </p>
         </div>
         <div className="card">
+          <p className="stat-label">Runway</p>
+          {wallet.runway ? (
+            <>
+              <p className="stat-value">{wallet.runway.days === null ? '∞' : `${wallet.runway.days} days`}</p>
+              <p className="stat-sub">
+                <RunwayBadge runway={wallet.runway} />
+              </p>
+              <p className="stat-sub">
+                Spending {formatMoney(wallet.runway.burn_rate_per_day, wallet.currency_code)} per day (last 30 days)
+              </p>
+            </>
+          ) : (
+            <p className="stat-sub">Not calculated for archived wallets.</p>
+          )}
+        </div>
+        <div className="card">
           <p className="stat-label">Transactions</p>
           <p className="stat-value">{txns.total}</p>
-          <p className="stat-sub">Runway and burn rate arrive in Sprint 2</p>
         </div>
       </div>
 

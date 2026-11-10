@@ -1,0 +1,37 @@
+@startuml seq-record-remittance
+title Record a remittance between own wallets (FR-20 – FR-22, ADR-0011)
+skinparam shadowing false
+autonumber
+
+actor Student
+participant "RemittanceForm\n(React)" as UI
+participant "remittances\nblueprint" as API
+participant "remittance_service" as RS
+participant "fx_service" as FX
+participant "transaction_service" as TS
+database "PostgreSQL" as DB
+
+Student -> UI : Home Account (INR) → Daily Spending (EUR)\nsent ₹50,000, received €520
+UI --> Student : preview: 1 EUR = 96.15 INR
+Student -> UI : Record transfer
+UI -> API : POST /remittances
+API -> API : validate (marshmallow) → 422 on error
+API -> RS : create_remittance(user, data)
+RS -> DB : both wallets belong to user? (else 404)
+RS -> RS : effective rate = 520 / 50,000 = 0.0104
+RS -> FX : get_rate(INR, EUR, date)
+FX --> RS : market rate (live / estimated)
+RS -> RS : hidden cost = 50,000 × market − 520\n(+ fee) in base currency
+RS -> DB : INSERT remittance
+RS -> TS : record TRANSFER_OUT ₹50,000\n(rate_to_base = 0.0104, USER)
+TS -> DB : INSERT transaction
+RS -> TS : record TRANSFER_IN €520\n(rate_to_home = 96.15384615, USER)
+TS -> DB : INSERT transaction
+opt fee entered
+  RS -> TS : record EXPENSE "Transfer fees"
+  TS -> DB : INSERT transaction
+end
+API -> DB : COMMIT (all or nothing)
+API --> UI : 201 remittance
+UI --> Student : list, hidden cost and balances updated
+@enduml

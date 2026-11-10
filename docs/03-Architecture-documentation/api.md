@@ -1,4 +1,4 @@
-# REST API Reference (v0.1.0)
+# REST API Reference (v0.2.0)
 
 Base URL: `/api`. JSON in and out. Money and exchange rates are **strings** (e.g. `"41.20"`,
 `"0.00939891"`) so no precision is lost. Dates are ISO `YYYY-MM-DD`.
@@ -47,9 +47,9 @@ All endpoints require it except those marked *public*.
 
 | Method | Path | Description |
 |---|---|---|
-| GET | `/wallets` | Wallets with current `balance` (own currency) |
+| GET | `/wallets` | Wallets with current `balance` (own currency) and `runway` `{balance, spent_last_window, burn_rate_per_day, days (null = unlimited), status: HEALTHY\|OK\|WARNING\|CRITICAL}` (null for archived) |
 | POST | `/wallets` | `{name, currency_code, wallet_type: BANK\|CASH\|SAVINGS\|PROOF_OF_FUNDS, opening_balance, opening_date}` → 201 |
-| GET | `/wallets/{id}` | One wallet with balance |
+| GET | `/wallets/{id}` | One wallet with balance and runway |
 | PATCH | `/wallets/{id}` | Fields above + `is_archived`; currency only while empty |
 | DELETE | `/wallets/{id}` | Only if it has no transactions (else 409 – archive instead) |
 | GET | `/categories?kind=INCOME\|EXPENSE` | System + own categories |
@@ -64,9 +64,46 @@ All endpoints require it except those marked *public*.
 | POST | `/transactions` | `{kind: INCOME\|EXPENSE, wallet_id, category_id, amount, txn_date, note?, phase_id?, rate_to_base?, rate_to_home?}` → 201. Omitted rates = market rate, frozen. |
 | GET | `/transactions/{id}` | One transaction |
 | PATCH | `/transactions/{id}` | `category_id, amount, txn_date, note, phase_id (null = automatic), rate_to_base, rate_to_home` – stored rates kept unless a new rate is given |
-| DELETE | `/transactions/{id}` | 204 (409 if it belongs to a remittance/loan payment) |
+| DELETE | `/transactions/{id}` | 204 (409 if it belongs to a remittance or loan payment – manage it there) |
 | GET | `/fx/rate?from=INR&to=EUR&date=` | `{from, to, rate, source, rate_date, estimated}` for pre-filling forms |
 
 **Transaction fields returned:** `id, wallet_id, kind, category_id, category_name, amount,
 currency_code, txn_date, note, phase_id, phase_name, phase_is_manual, rate_to_base, rate_to_home,
 amount_base, amount_home, rate_source (IDENTITY|USER|LIVE|FALLBACK), estimated, remittance_id`.
+
+## Remittances (Sprint 2)
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/remittances` | `{items[], summary: {count, hidden_cost_total, hidden_cost_year, year}}` newest first |
+| POST | `/remittances` | `{from_wallet_id?, to_wallet_id?, sent_amount, received_amount, sent_currency? (if no sender wallet), received_currency? (if no receiver wallet), fee_amount?, provider?, remit_date, category_id?, note?}` → 201. At least one own wallet. |
+| GET | `/remittances/{id}` | One remittance: `direction (OWN\|IN\|OUT), effective_rate, market_rate, hidden_cost_base, …` |
+| DELETE | `/remittances/{id}` | Deletes the remittance and its transactions → 204 |
+
+## Monthly Plan and Target to Earn (Sprint 2)
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/plan?month=YYYY-MM` | `{month, currency, minimum_target, estimated_rates, items[]}`; each item has `active_this_month` and `amount_base` |
+| POST | `/plan` | `{name, category_id (expense), amount, currency_code, valid_from, valid_to?, phase_id?}` → 201 |
+| PATCH | `/plan/{id}` | Any field above (409 for EMI lines – they follow their loan) |
+| DELETE | `/plan/{id}` | 204 (409 for EMI lines) |
+| GET | `/target?month=YYYY-MM` | `{target, earned, spent, still_to_earn, surplus_over_target, net, progress_pct, estimated_rates, by_source[], lines[] (planned, actual, difference), history[6] (month, target, earned, spent)}` |
+
+## Loans (Sprint 2)
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/loans` | Loans with `summary` and `affordability` |
+| POST | `/loans` | `{name, lender?, currency_code, annual_rate_pct, sanctioned_amount, outstanding_amount, emi_amount, emi_start_date?, min_part_payment?, default_wallet_id? (same currency), note?}` → 201 |
+| GET | `/loans/{id}` | Loan + `summary` (incl. `schedule[]`) + `affordability` + `payments[]` (newest first) |
+| PATCH | `/loans/{id}` | Any field above; correcting `outstanding_amount` is allowed at any time |
+| DELETE | `/loans/{id}` | Deletes loan, payments and EMI plan line; wallet expenses stay → 204 |
+| POST | `/loans/{id}/payments` | `{payment_type: EMI\|PART_PAYMENT, amount, paid_on, wallet_id? (omit = loan default, null = none), note?}` → 201 with `interest_part, principal_part, balance_before, balance_after, interest_saved, emis_saved` |
+| DELETE | `/loans/{id}/payments/{pid}` | Undo – only the latest payment (else 409) → 204 |
+
+`summary`: `interest_paid, principal_paid, total_paid, interest_saved, emis_saved, months_to_payoff,
+future_interest, payoff_month, emi_covers_interest, repaid_pct`.
+`affordability` (null without a minimum part-payment): `status (AFFORDABLE|SAVE|NOT_AFFORDABLE),
+months_needed, avg_surplus, buffered_surplus, min_part_payment_base, interest_saved_if_paid,
+emis_saved_if_paid, lookback_months, buffer_pct, estimated_rate`.

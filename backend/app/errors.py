@@ -39,13 +39,22 @@ def error_body(code: str, message: str, details=None):
     return body
 
 
+def _rollback() -> None:
+    """Discard half-done changes of a failed request."""
+    from .extensions import db
+
+    db.session.rollback()
+
+
 def register_error_handlers(app: Flask) -> None:
     @app.errorhandler(ApiError)
     def handle_api_error(err: ApiError):
+        _rollback()
         return jsonify(error_body(err.code, err.message, err.details)), err.status
 
     @app.errorhandler(ValidationError)
     def handle_validation(err: ValidationError):
+        _rollback()
         # 422 for well-formed requests with invalid content (NFR, test TC-V*).
         return (
             jsonify(error_body("VALIDATION_ERROR", "Some fields are invalid.", err.messages)),
@@ -59,5 +68,6 @@ def register_error_handlers(app: Flask) -> None:
 
     @app.errorhandler(Exception)
     def handle_unexpected(err: Exception):  # pragma: no cover - safety net
+        _rollback()
         app.logger.exception("Unhandled error: %s", err)
         return jsonify(error_body("INTERNAL_ERROR", "Something went wrong.")), 500

@@ -17,17 +17,19 @@ application, through settling in and studying, to job search, work and the last 
 | Accounts | Register with currencies and journey dates, login/logout, profile, password | ✅ v0.1.0 |
 | Life phases | Pre-departure, settling in, study, job search, work – every transaction belongs to one | ✅ v0.1.0 |
 | Wallets & transactions | Any currency; exchange rate frozen on every entry; filters and search | ✅ v0.1.0 |
-| Remittances | Enter amount sent and received → real rate and hidden cost | Sprint 2 |
-| Monthly plan & Target to Earn | Fixed costs incl. loan EMIs → minimum monthly earning target | Sprint 2 |
-| Loan planner | EMIs, part-payments, interest saved, payoff, part-payment affordability | Sprint 2 |
-| Runway | Days of money left per wallet with status and alerts | Sprint 2 |
+| Remittances | Enter amount sent and received → real rate and hidden cost; transfers between own wallets | ✅ v0.2.0 |
+| Monthly plan & Target to Earn | Fixed costs incl. loan EMIs → minimum monthly earning target; plan vs. actual | ✅ v0.2.0 |
+| Loan planner | EMIs, part-payments, interest saved, payoff, part-payment affordability | ✅ v0.2.0 |
+| Runway | Days of money left per wallet with status and alerts | ✅ v0.2.0 |
 | Reports & dashboard | Month / year / phase / lifetime; cost of going abroad; net worth | Sprint 3 |
 
 ## Screenshots
 
-| Transactions | Add an expense in INR |
+| Loan Planner | Target to Earn |
 |---|---|
-| ![Transactions](docs/screenshots/sprint1-transactions.png) | ![Add expense](docs/screenshots/sprint1-add-expense.png) |
+| ![Loan](docs/screenshots/sprint2-loan-detail.png) | ![Target](docs/screenshots/sprint2-target.png) |
+| **Transactions** | **Remittances** |
+| ![Transactions](docs/screenshots/sprint1-transactions.png) | ![Remittances](docs/screenshots/sprint2-remittances.png) |
 
 More in [docs/screenshots](docs/screenshots/).
 

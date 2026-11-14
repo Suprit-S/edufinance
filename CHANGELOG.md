@@ -3,6 +3,34 @@
 All notable changes are documented here. Format: [Keep a Changelog](https://keepachangelog.com/),
 versioning: [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] – Sprint 3: insight and release
+
+### Added
+- Reports for a month, year, life phase or the whole journey: earned, spent, net, top categories,
+  spending per phase, earnings by source, month-by-month chart (`/api/reports`).
+- Cost of going abroad and cost of the degree (`/api/reports/costs`), net-worth timeline
+  (`/api/reports/net-worth`), loan payoff timeline (`/api/reports/loans`).
+- Full dashboard: total balance in base currency, target progress, loans, current phase, wallets,
+  alerts, 30-day spending (`/api/dashboard`).
+- Data export as JSON (`GET /api/account/export`) and account deletion with password
+  (`DELETE /api/account`).
+- Demo account `demo@edufinance.app` / `Demo#2026` (`flask seed-demo [--reset]`, loaded by Docker
+  when `SEED_DEMO=true`) and a "Fill in demo login" button.
+- Production setup: `docker-compose.prod.yml`, `deploy/Caddyfile` (HTTPS, security headers),
+  [deployment guide](docs/deployment.md).
+- Performance script `backend/scripts/perf_dashboard.py` (TC-P01).
+- ADR-0012; ADR-0010 addendum; glossary terms *Demo account*, *Net worth*, *Payoff month*, *Period*.
+
+### Changed
+- Exchange-rate cache: one row per currency, date **and source** (migration 0002), so a live rate on
+  the fallback date no longer overwrites the fallback table (TC-FX07).
+- Accessibility: readable button text in the dark theme (`--on-accent`), darker warning colour,
+  correct heading order on wallet and loan cards, theme switch on the login page reachable for
+  screen readers.
+
+### Removed
+- "Coming soon" placeholder page and component (all pages now exist).
+
 ## [0.2.0] – Sprint 2: money flows
 
 ### Added

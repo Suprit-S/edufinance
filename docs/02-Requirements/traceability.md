@@ -1,7 +1,7 @@
 # Traceability Matrix
 
 Links each requirement to the user story, the code that implements it and the test cases that
-verify it. Updated at the end of every sprint. *Planned* modules are named as in the
+verify it. Updated at the end of every sprint. Module names follow the
 [component diagram](../03-Architecture-documentation/diagrams/component-diagram.puml).
 
 | Requirement | User story | Backend | Frontend | Test cases | Sprint |
@@ -22,15 +22,17 @@ verify it. Updated at the end of every sprint. *Planned* modules are named as in
 | FR-28 – FR-33 | US-10 | `services/loan_service.py`, `api/loans.py` | `LoansPage`, `LoanDetailPage`, `LoanForm` | TC-L01–L05, TC-L08, TC-L09 | 2 ✅ |
 | FR-34 | US-11 | `loan_service.affordability`, `affordability_verdict` | `AffordabilityCard` | TC-L06, TC-L07, TC-L10, TC-F11 | 2 ✅ |
 | FR-35, FR-36 | US-12 | `services/runway_service.py`, `api/wallets.py` | `RunwayBadge`, Wallets, Dashboard alert | TC-RW01–RW04, TC-F12 | 2 ✅ |
-| FR-37 – FR-40 | US-13 | `services/report_service` | Reports | TC-RP01–RP03 | 3 |
-| FR-41 | US-14 | `api/dashboard` | Dashboard | TC-P01 | 3 |
-| FR-42 | US-15 | `api/account` | Profile | TC-EX01, TC-EX02 | 3 |
-| FR-43 | US-16 | `seed/demo_data` | – | manual | 3 |
-| NFR-01 | US-14 | – | – | TC-P01 | 3 |
-| NFR-02, NFR-12 | US-18 | – | design system (`styles/`) | TC-F03, TC-U01, TC-U03 | skeleton / 3 |
-| NFR-03 | US-05 | – | Transaction form | TC-U02 | 3 |
+| FR-37, FR-38 | US-13 | `services/report_service.py` (`resolve_period`, `period_report`, `fold_top`), `api/reports.py` | `ReportsPage`, `BarList`, `EarnedSpentChart` | TC-RP02, TC-RP04, TC-RP06, TC-RP07, TC-F14, TC-E2E03 | 3 ✅ |
+| FR-39 | US-13 | `report_service.cost_reports` | `ReportsPage` (whole journey) | TC-RP01, TC-DEMO01 | 3 ✅ |
+| FR-40 | US-13 | `report_service.net_worth_timeline`, `outstanding_on`, `loan_timeline` | `ReportsPage`, `MonthLineChart` | TC-RP03, TC-RP05, TC-RP08, TC-RP09 | 3 ✅ |
+| FR-41 | US-14 | `report_service.dashboard`, `api/reports.py` (`/dashboard`) | `DashboardPage`, `BarList` | TC-DB01, TC-F14, TC-E2E03 | 3 ✅ |
+| FR-42 | US-15 | `services/account_service.py`, `api/reports.py` (`/account`) | `DataPrivacy` (Profile) | TC-EX01, TC-EX02, TC-F16, TC-E2E03 | 3 ✅ |
+| FR-43 | US-16 | `seed/demo_data.py`, `flask seed-demo`, `entrypoint.sh` | `LoginPage` (demo hint) | TC-DEMO01, TC-F15 | 3 ✅ |
+| NFR-01 | US-14 | aggregate SQL in `report_service`, `scripts/perf_dashboard.py` | lazy-loaded chart pages | TC-P01 | 3 ✅ |
+| NFR-02, NFR-12 | US-18 | – | design system (`styles/`), `--on-accent` token, text values in `BarList`, chart tables | TC-F03, TC-F12, TC-F14, TC-U01, TC-U03 | 3 ✅ |
+| NFR-03 | US-05 | – | Transaction form | TC-U02 | ⏳ (user test) |
 | NFR-04 – NFR-07 | US-02 | `auth_service`, JWT callbacks in `app/__init__.py`, `require_auth`, `get_*` ownership checks | `api/client.js` (401 → logout) | TC-SEC01–SEC04 | 1 ✅ |
 | NFR-08 | US-06 | `services/fx_service.py` | "est." tag, rate hint | TC-FX03, TC-FX04, TC-E2E01 | 1 ✅ |
 | NFR-09 | – | `services/money`, NUMERIC columns | `lib/format` | TC-M01–M07, TC-S09, TC-F01 | skeleton |
-| NFR-10, NFR-13 | US-17 | `docker-compose.yml`, Dockerfiles | nginx | TC-S01, TC-D01, TC-D02 | skeleton / 3 |
+| NFR-10, NFR-13 | US-17 | `docker-compose.yml`, `docker-compose.prod.yml`, `deploy/Caddyfile`, Dockerfiles, [deployment guide](../deployment.md) | nginx | TC-S01, TC-D01, TC-D02 | 3 (D01/D02 after deployment) |
 | NFR-11 | – | CI workflow | CI workflow | coverage report | all |

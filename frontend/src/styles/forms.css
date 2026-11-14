@@ -500,8 +500,14 @@
   font-size: 0.85rem;
 }
 
-.wallet-card h3 {
+.wallet-card h2 {
   margin: 0;
+}
+
+/* card titles are h2 for a correct heading order, styled like h3 */
+.wallet-card h2,
+.loan-card h2 {
+  font-size: 1.05rem;
 }
 
 .archived summary {
@@ -793,4 +799,99 @@ select.input {
 .locked {
   font-size: 0.8rem;
   color: var(--text-muted);
+}
+
+/* ---------- Sprint 3 ---------- */
+.bar-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-3) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.bar-list-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: 0.92rem;
+  margin-bottom: 4px;
+}
+
+.bar-list-share {
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+}
+
+.bar-track {
+  height: 8px;
+  background: var(--surface-muted);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--series-1);
+  border-radius: 4px;
+}
+
+.bar-fill.other {
+  background: var(--text-faint);
+}
+
+.stat-of {
+  font-size: 0.6em;
+  color: var(--text-muted);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.period-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+}
+
+.period-select {
+  width: auto;
+  min-width: 200px;
+}
+
+.period-label {
+  color: var(--text-muted);
+  margin-top: calc(var(--space-2) * -1);
+}
+
+.section-title {
+  margin-top: var(--space-4);
+}
+
+.subhead {
+  margin-top: var(--space-5);
+}
+
+.demo-hint {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.demo-hint strong {
+  color: var(--text);
 }

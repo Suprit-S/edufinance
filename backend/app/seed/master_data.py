@@ -233,7 +233,10 @@ def seed_master_data() -> dict:
 
     for quote, value in FALLBACK_USD_RATES.items():
         row = FxRate.query.filter_by(
-            base_currency="USD", quote_currency=quote, rate_date=FALLBACK_RATE_DATE
+            base_currency="USD",
+            quote_currency=quote,
+            rate_date=FALLBACK_RATE_DATE,
+            source=FxSource.FALLBACK,
         ).one_or_none()
         if row is None:
             row = FxRate(base_currency="USD", quote_currency=quote, rate_date=FALLBACK_RATE_DATE)

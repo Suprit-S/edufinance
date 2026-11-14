@@ -70,14 +70,14 @@ documentation:
 
 ## 3. Milestones
 
-| Milestone | Content |
-|---|---|
-| M1 – Concept approved | Phase 1 submitted and accepted by the tutor |
-| M2 – Release v0.1.0 | Skeleton + Sprint 1: accounts, phases, wallets, transactions, FX |
-| M3 – Release v0.2.0 | Sprint 2: remittances, monthly plan, target, loans, runway |
-| M4 – Release v0.3.0 | Sprint 3: reports, dashboard, demo data, deployment |
-| M5 – Phase 2 submission | Composite PDF + written explanation |
-| M6 – Phase 3 submission | Final product, abstract, ZIP folder, v1.0.0 (after tutor feedback) |
+| Milestone | Content | Status |
+|---|---|---|
+| M1 – Concept approved | Phase 1 submitted and accepted by the tutor | ✅ |
+| M2 – Release v0.1.0 | Skeleton + Sprint 1: accounts, phases, wallets, transactions, FX | ✅ |
+| M3 – Release v0.2.0 | Sprint 2: remittances, monthly plan, target, loans, runway | ✅ |
+| M4 – Release v0.3.0 | Sprint 3: reports, dashboard, demo data, deployment | ✅ code and guide; cloud run by the author |
+| M5 – Phase 2 submission | Composite PDF + written explanation | ⏳ |
+| M6 – Phase 3 submission | Final product, abstract, ZIP folder, v1.0.0 (after tutor feedback) | ⏳ |
 
 ## 4. Product backlog (user stories)
 

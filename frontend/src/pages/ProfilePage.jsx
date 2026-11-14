@@ -3,6 +3,7 @@ import api, { fieldErrors } from '../api/client'
 import { useAuth } from '../auth/useAuth'
 import ConfirmDialog from '../components/ConfirmDialog'
 import CurrencySelect from '../components/CurrencySelect'
+import DataPrivacy from '../components/DataPrivacy'
 import ErrorBanner from '../components/ErrorBanner'
 import Field from '../components/Field'
 import Modal from '../components/Modal'
@@ -82,6 +83,7 @@ export default function ProfilePage() {
 
       <ProfileForm user={user} onSaved={refresh} />
       <PasswordForm />
+      <DataPrivacy />
 
       {dialog?.type === 'phase' && (
         <Modal title={dialog.phase ? `Edit “${dialog.phase.name}”` : 'Add phase'} onClose={close}>

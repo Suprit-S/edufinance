@@ -23,3 +23,14 @@ documented fallback.
 ## Consequences
 Production equals development, and the examiner can reproduce it with one command. The author
 maintains the VM (security updates) – documented in the deployment guide (Sprint 3).
+
+## Addendum (Sprint 3): implementation
+- `docker-compose.prod.yml` adds a **Caddy** service as the only public entry point (ports 80/443)
+  and removes the published frontend port. `deploy/Caddyfile` sets security headers
+  (HSTS, `nosniff`, `DENY` framing, referrer and permissions policy).
+- Secrets have **no defaults** in production (`${VAR:?}`); the stack does not start with
+  development secrets.
+- VM size: **B2ats v2** (2 vCPU, 1 GiB, inside the Azure for Students free hours) plus a 2 GB swap
+  file for the frontend build. The Azure DNS label (`*.cloudapp.azure.com`) avoids buying a domain;
+  Caddy obtains the Let's Encrypt certificate for it.
+- Step-by-step guide, operations and troubleshooting: [deployment.md](../../deployment.md).

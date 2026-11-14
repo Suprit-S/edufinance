@@ -6,7 +6,6 @@ import DashboardPage from './pages/DashboardPage'
 import LoansPage from './pages/LoansPage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
-import PlaceholderPage from './pages/PlaceholderPage'
 import PlanPage from './pages/PlanPage'
 import ProfilePage from './pages/ProfilePage'
 import RegisterPage from './pages/RegisterPage'
@@ -18,6 +17,7 @@ import WalletsPage from './pages/WalletsPage'
 // Pages with charts load the chart library only when opened (smaller first load).
 const LoanDetailPage = lazy(() => import('./pages/LoanDetailPage'))
 const TargetPage = lazy(() => import('./pages/TargetPage'))
+const ReportsPage = lazy(() => import('./pages/ReportsPage'))
 
 const loading = <p className="status-line">Loading…</p>
 
@@ -38,7 +38,7 @@ export default function App() {
           <Route path="remittances" element={<RemittancesPage />} />
           <Route path="loans" element={<LoansPage />} />
           <Route path="loans/:loanId" element={<Suspense fallback={loading}><LoanDetailPage /></Suspense>} />
-          <Route path="reports" element={<PlaceholderPage page="reports" />} />
+          <Route path="reports" element={<Suspense fallback={loading}><ReportsPage /></Suspense>} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Route>

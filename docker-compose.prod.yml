@@ -1,0 +1,51 @@
+# Production override: HTTPS with Caddy in front of the normal stack.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# Differences to the local set-up:
+#   - Caddy is the only service with public ports (80 and 443). It gets and
+#     renews a Let's Encrypt certificate for $DOMAIN automatically.
+#   - The frontend (nginx) is no longer published on the host.
+#   - Secrets have no defaults: the stack refuses to start without them.
+# Needs Docker Compose v2.24 or newer (for "!reset"). See docs/deployment.md.
+services:
+  backend:
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in .env}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Set JWT_SECRET_KEY in .env}
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-2}
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  db:
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    logging: *logging
+
+  frontend:
+    ports: !reset []
+    logging: *logging
+
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    depends_on:
+      - frontend
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env, e.g. edufinance-xyz.westeurope.cloudapp.azure.com}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    logging: *logging
+
+volumes:
+  caddy_data:
+  caddy_config:

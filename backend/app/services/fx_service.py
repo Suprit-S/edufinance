@@ -119,8 +119,8 @@ def _store_api_rates(rates: dict[str, Decimal], on: date) -> None:
         return
     stmt = insert(FxRate).values(rows)
     stmt = stmt.on_conflict_do_update(
-        constraint="uq_fx_rates_pair_date",
-        set_={"rate": stmt.excluded.rate, "source": stmt.excluded.source},
+        constraint="uq_fx_rates_pair_date_source",
+        set_={"rate": stmt.excluded.rate},
     )
     db.session.execute(stmt)
     db.session.flush()

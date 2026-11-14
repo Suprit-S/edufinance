@@ -69,6 +69,19 @@ export default function LoginPage() {
       <p className="auth-switch">
         New here? <Link to="/register">Create an account</Link>
       </p>
+      <aside className="demo-hint" aria-label="Demo account">
+        <p>
+          <strong>Just looking?</strong> Log in as the demo student Ananya (India → Germany):
+        </p>
+        <p className="mono">demo@edufinance.app · Demo#2026</p>
+        <button
+          type="button"
+          className="btn btn-secondary btn-small"
+          onClick={() => setForm({ email: 'demo@edufinance.app', password: 'Demo#2026' })}
+        >
+          Fill in demo login
+        </button>
+      </aside>
     </AuthLayout>
   )
 }

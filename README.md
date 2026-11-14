@@ -21,12 +21,16 @@ application, through settling in and studying, to job search, work and the last 
 | Monthly plan & Target to Earn | Fixed costs incl. loan EMIs → minimum monthly earning target; plan vs. actual | ✅ v0.2.0 |
 | Loan planner | EMIs, part-payments, interest saved, payoff, part-payment affordability | ✅ v0.2.0 |
 | Runway | Days of money left per wallet with status and alerts | ✅ v0.2.0 |
-| Reports & dashboard | Month / year / phase / lifetime; cost of going abroad; net worth | Sprint 3 |
+| Reports & dashboard | Month / year / phase / lifetime; cost of going abroad and of the degree; net worth; loan payoff | ✅ v0.3.0 |
+| Data & privacy | Download all your data (JSON); delete your account | ✅ v0.3.0 |
+| Demo account | Ananya Rao, India → Germany, ~300 realistic entries – try every feature at once | ✅ v0.3.0 |
 
 ## Screenshots
 
-| Loan Planner | Target to Earn |
+| Dashboard | Reports (lifetime) |
 |---|---|
+| ![Dashboard](docs/screenshots/sprint3-dashboard.png) | ![Reports](docs/screenshots/sprint3-reports-lifetime.png) |
+| **Loan Planner** | **Target to Earn** |
 | ![Loan](docs/screenshots/sprint2-loan-detail.png) | ![Target](docs/screenshots/sprint2-target.png) |
 | **Transactions** | **Remittances** |
 | ![Transactions](docs/screenshots/sprint1-transactions.png) | ![Remittances](docs/screenshots/sprint2-remittances.png) |
@@ -48,10 +52,22 @@ Open **http://localhost:8080**. Health check: http://localhost:8080/api/health
 
 The backend applies database migrations and seeds master data automatically on every start.
 
-Create your own account on the start page ("Create an account"). A demo login
-(`demo@edufinance.app` / `Demo#2026`) with realistic data follows in Sprint 3.
+**Demo login:** `demo@edufinance.app` / `Demo#2026` – or click *Fill in demo login* on the start
+page. The demo user is created on start-up while `SEED_DEMO=true` (default). Recreate it with
+`docker compose exec backend flask seed-demo --reset`. You can also create your own account.
 
 Stop: `Ctrl+C`, then `docker compose down` (add `-v` to delete the database volume).
+
+## Cloud deployment
+
+Production runs the same containers plus Caddy for HTTPS:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
+Step by step for a free Azure for Students VM (and a Render + Neon alternative):
+**[docs/deployment.md](docs/deployment.md)**.
 
 ## Local development (without Docker)
 
@@ -68,7 +84,7 @@ cd backend
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements-dev.txt
 export FLASK_APP=wsgi.py                            # Windows: set FLASK_APP=wsgi.py
-flask db upgrade && flask seed-master
+flask db upgrade && flask seed-master && flask seed-demo
 flask run --debug
 
 # 3. Frontend (http://localhost:5173, proxies /api to :5000)
@@ -90,9 +106,12 @@ cd frontend
 npm test
 npm run lint
 npm run build
+
+# Performance check (NFR-01): 2,000 transactions, p95 of the dashboard and reports
+cd ../backend && python scripts/perf_dashboard.py
 ```
 
-The same checks run on every push in GitHub Actions (`.github/workflows/ci.yml`).
+The tests and linters run on every push in GitHub Actions (`.github/workflows/ci.yml`).
 Test cases with inputs and expected results: [docs/02-Requirements/test-cases.md](docs/02-Requirements/test-cases.md).
 
 ## Project structure
@@ -108,6 +127,7 @@ edufinance/
 │   │   ├── config.py        settings from environment variables
 │   │   └── errors.py        JSON error format
 │   ├── migrations/          Alembic migrations
+│   ├── scripts/             performance check
 │   └── tests/               pytest
 ├── frontend/                React 19 + Vite SPA
 │   └── src/
@@ -117,7 +137,9 @@ edufinance/
 │       ├── lib/             helpers (formatting, theme)
 │       └── styles/          design tokens and CSS
 ├── docs/                    project documentation (see docs/README.md)
+├── deploy/Caddyfile        HTTPS reverse proxy (production)
 ├── docker-compose.yml
+├── docker-compose.prod.yml
 └── .github/workflows/ci.yml
 ```
 
@@ -126,7 +148,7 @@ edufinance/
 * [Project plan (Scrum, backlog, sprints)](docs/01-Project-management/project-plan.md)
 * [Requirements](docs/02-Requirements/requirements.md) · [Glossary](docs/02-Requirements/glossary.md)
 * [Architecture](docs/03-Architecture-documentation/architecture.md) · [REST API](docs/03-Architecture-documentation/api.md) · [Decisions (ADRs)](docs/03-Architecture-documentation/adr/README.md) · [Tech stack](docs/03-Architecture-documentation/tech-stack.md)
-* [Technical debt](docs/technical-debt.md) · [Changelog](CHANGELOG.md)
+* [Deployment guide](docs/deployment.md) · [Technical debt](docs/technical-debt.md) · [Changelog](CHANGELOG.md)
 
 ## Third-party software
 

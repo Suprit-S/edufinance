@@ -106,4 +106,50 @@ Sprint goal **met**. Accepted stories: US-07, US-08, US-09, US-10, US-11, US-12 
   on every page automatically in the browser script.
 
 ## Sprint 3 – Insight and release
-*to be filled*
+
+**Goal:** Insight and release: reports, dashboard, demo data, cloud deployment and Phase 2
+documents.
+
+### Increment
+- **Reports:** one page with a period switch (month, year, life phase, lifetime): earned, spent,
+  net, money not counted as earned (loan money), top categories, spending per phase, earnings by
+  source, month-by-month chart with a table view.
+- **Whole journey:** cost of going abroad (by topic), cost of the degree so far with study
+  progress, net-worth line (wallets − loans at today's rates, ADR-0012) and loan payoff line with
+  the debt-free month per loan.
+- **Dashboard:** total balance in the base currency, this month's earned vs. target, loan summary
+  with the debt-free month, current phase with progress, wallets, low-funds alerts and the last
+  30 days' spending (top 5 + Other).
+- **Data rights:** download all own data as JSON; delete the account with all data after
+  re-entering the password (GDPR, FR-42).
+- **Demo account:** Ananya Rao (India → Germany), ~300 transactions from the first application to
+  today, blocked account, remittances, two loans, plan; one click on the login page fills in the
+  credentials; loaded automatically by Docker (`SEED_DEMO=true`).
+- **Quality:** performance script (2,000 transactions, p95 20 ms for the dashboard), axe-core and
+  Lighthouse audits (accessibility 100 on every page), widths 360–1920 px, keyboard check.
+- **Release:** `docker-compose.prod.yml` with Caddy (HTTPS, security headers), deployment guide
+  for Azure for Students with a Render + Neon fallback.
+- **Tests:** 14 new backend tests (102 in total, service coverage 96 %), 4 new frontend tests
+  (32 in total), scripted browser run TC-E2E03.
+
+### Review
+Sprint goal **met** for the software. Accepted stories: US-13, US-14, US-15, US-16, US-18
+(US-17: compose files and guide done; the cloud run TC-D01/TC-D02 is carried out by the author on
+the Azure VM). The Phase 2 composite PDF is assembled by the author from these documents.
+
+**Demo observations**
+- The demo's lifetime report shows *spent > earned* (−€4,271.67): correct, because loan money and
+  savings from home pay for the difference – which the "not counted as earned" line explains.
+- Net worth falls below zero after the loan disbursement and climbs back with salary: the line tells
+  the story of a study loan better than any table.
+- A real bug surfaced while seeding the demo: an API rate fetched on the fallback date replaced the
+  fallback table → migration 0002 (one row per date *and source*) and regression test TC-FX07.
+
+### Retrospective
+- *Went well:* the realistic demo user acted as an integration test of all three sprints and found
+  the FX bug; automated accessibility audits turned "looks fine" into measurable results.
+- *Went badly:* contrast problems in the dark theme and a focusable element inside an
+  `aria-hidden` panel existed since Sprint 1 – found only now by axe-core.
+- *Improve in Phase 3:* run the axe audit in the browser script of every change; run the usability
+  test with three fellow students (TC-U02); keep the deployment updated with `git pull` + rebuild.
+

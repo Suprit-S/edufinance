@@ -4,7 +4,7 @@ Each test case names the requirement it verifies, concrete input values and the 
 behaviour. Automated tests carry the test-case ID in their name (e.g. `test_tc_m01_...`), so every
 row can be found in the code. Status: ✅ passing · ⏳ planned for the sprint shown.
 
-**Totals after Sprint 2:** 88 backend tests (service-layer coverage 96 %), 28 frontend tests – all passing.
+**Totals after Sprint 3:** 102 backend tests (service-layer coverage 96 %), 32 frontend tests – all passing. Non-functional checks: see "Sprint 3 – Quality checks".
 
 How to run: `cd backend && pytest` (backend) · `cd frontend && npm test` (frontend).
 
@@ -191,18 +191,47 @@ Rate for EMIs: 1 INR = 0.00940512 EUR.
 | TC-E2E02 | Ananya with 6 months of salary/rent/groceries; plan items; transfer ₹50,000 → €520 (UI); money from family (UI); add SBI loan with minimum part-payment (UI); record EMI and ₹20,000 part-payment (UI); open Plan, Target, Wallets, Dashboard | Loan: interest ₹3,683.33 / principal ₹10,316.67; part-payment saves ₹6,860.63 and 2 EMIs, debt-free moves May 2030 → Mar 2030; EMI line in plan; low-funds alert on dashboard | ✅ |
 | TC-U01 (partial) | All pages at 360 px | No horizontal page scrolling (wide tables scroll inside their card) | ✅ 0 px on all 9 pages |
 
-## Planned – Sprint 3 (reports, dashboard, quality)
+## Sprint 3 – Reports, dashboard, data rights (`test_reports.py`, `test_demo_seed.py`)
 
-| ID | Requirement | Input | Expected result | Status |
+Shared data for TC-RP01/02/04/EX01 (`_journey`): Visa fee €100 (Aug 2025), Accommodation deposit
+€200 (15 Oct 2025, Settling in), Groceries €50 + €30 (Mar 2026), Part-time salary €400 (Mar 2026),
+Loan disbursement €900 (Mar 2026, not earned).
+
+| ID | Requirement | Input | Expected result | Automated test | Status |
+|---|---|---|---|---|---|
+| TC-RP01 | FR-39 | `_journey`, GET `/reports/costs` | Going abroad €300.00 (Housing €200, Visa & immigration €100); degree so far €380.00 | `test_tc_rp01_...` | ✅ |
+| TC-RP02 | FR-37 | Period = phase Study; Lifetime | Study: spent €80.00 (the deposit dated in Study but assigned to Settling in is excluded), earned €400.00, other income €900.00, net €320.00. Lifetime starts at the planning start | `test_tc_rp02_...` | ✅ |
+| TC-RP03 | FR-40 | Wallet €1,000 opened Jan 2026, rent €200 Feb, INR loan ₹100,000 (1 INR = 0.01 EUR) | Dec 2025 assets €0; Jan €1,000; Feb €800; now debt €1,000, net worth −€200.00 | `test_tc_rp03_...` | ✅ |
+| TC-RP04 | FR-37 | MONTH 2026-03, YEAR 2025, another user's phase, `WEEK`, `YEAR=abc` | Correct start/end and totals; 12 months in a year; 422 for a foreign phase and invalid input | `test_tc_rp04_...` | ✅ |
+| TC-RP05 | FR-40 | Loan with payments 1,000 → 800 → 600 | Outstanding before creation 0, before first payment 1,000, after each payment 800 / 600 | `test_tc_rp05_...` | ✅ |
+| TC-RP06 | FR-37 | 20 Nov 2025 – 3 Feb 2026 | 4 month starts (Nov, Dec, Jan, Feb) | `test_tc_rp06_...` | ✅ |
+| TC-RP07 | FR-38, FR-41 | Four categories, keep top 2 | B €50, C €20, Other €6 | `test_tc_rp07_...` | ✅ |
+| TC-RP08 | FR-40 | €1,000 at 12 %, EMI €500 | Outstanding 1,000 → 510 → 15.10 → 0; debt-free in 2 months | `test_tc_rp08_...` | ✅ |
+| TC-RP09 | FR-40 | 0 % loan €300, EMI €100 starting in 2 months | Flat until the first EMI, then 200 → 100 → 0 | `test_tc_rp09_...` | ✅ |
+| TC-DB01 | FR-36, FR-41 | EUR wallet €613.79 + ₹50,000; 7 expenses (€1,060) 3 days ago; salary €1,150 | Total balance €1,203.79; top 5 + Other €70.00; low-funds alert CRITICAL (19 days); target €420, earned €1,150 | `test_tc_db01_dashboard` | ✅ |
+| TC-EX01 | FR-42 | `_journey`, GET `/account/export` | Download (attachment) with profile, 6 transactions, 4 phases; no password hash or password | `test_tc_ex01_...` | ✅ |
+| TC-EX02 | FR-42 | DELETE `/account` with a wrong, then the right password | 422 first; then all rows of the user removed, the token is rejected, the other user is unaffected | `test_tc_ex02_...` | ✅ |
+| TC-DEMO01 | FR-43 | `seed-demo` twice, then `--reset` | Idempotent (no duplicates); >250 transactions; no negative balance; blocked account archived; no estimated rates; going abroad > €3,000; affordability for the SBI loan; all 4 system phases | `test_tc_demo01_...` | ✅ |
+| TC-FX07 | NFR-08 | API rate fetched on the fallback date (1 Jan 2026) | Fallback table row of that date is kept (separate row per source, migration 0002) | `test_tc_fx07_...` | ✅ |
+
+## Sprint 3 – Frontend
+
+| ID | Requirement | Input | Expected result | Automated test | Status |
+|---|---|---|---|---|---|
+| TC-F14 | FR-38, FR-41, NFR-12 | BarList with three amounts; empty list | Amounts and shares as text; largest bar 100 % wide; empty state text | `Sprint3Components.test.jsx` | ✅ |
+| TC-F15 | FR-43 | "Fill in demo login" | E-mail and password fields filled with the demo credentials | `Sprint3Components.test.jsx` | ✅ |
+| TC-F16 | FR-42 | Data & privacy: delete with password | Confirmation needs the password; DELETE sent; user logged out | `Sprint3Components.test.jsx` | ✅ |
+
+## Sprint 3 – Quality checks (non-functional)
+
+| ID | Requirement | Method | Expected | Result |
 |---|---|---|---|---|
-| TC-RP01 | FR-39 | Demo user | Cost of going abroad = sum of Pre-departure + Settling in expenses | ⏳ S3 |
-| TC-RP02 | FR-37 | Period = phase Study | Only transactions of that phase counted | ⏳ S3 |
-| TC-RP03 | FR-40 | Net worth on a date | Σ wallet balances (base) − Σ loan outstanding (base) | ⏳ S3 |
-| TC-EX01 | FR-42 | Export | JSON contains wallets, transactions, loans, plan; no password hash | ⏳ S3 |
-| TC-EX02 | FR-42 | Delete account | All rows of the user removed; login fails | ⏳ S3 |
-| TC-P01 | NFR-01 | 2,000 transactions, 50 dashboard requests | p95 ≤ 2 s | ⏳ S3 |
-| TC-U01 | NFR-02 | Check every page at 360 / 768 / 1280 / 1920 px | No horizontal scrolling | ⏳ S3 |
-| TC-U02 | NFR-03 | 3 first-time users record an expense | Each ≤ 60 s | ⏳ S3 |
-| TC-U03 | NFR-12 | Lighthouse accessibility audit | Score ≥ 90 | ⏳ S3 |
-| TC-D01 | NFR-10 | Clean machine: `docker compose up --build` | App on :8080 within 5 min | ⏳ S3 |
-| TC-D02 | NFR-13 | Uptime check of the cloud URL for 7 days | No downtime, no cold start | ⏳ S3 |
+| TC-P01 | NFR-01 | `python scripts/perf_dashboard.py`: demo history + filler = **2,000 transactions**, 30 calls per endpoint after a warm-up (Flask test client, local PostgreSQL 16) | p95 ≤ 2,000 ms | ✅ p95: dashboard 20 ms, lifetime report 11 ms, net worth 10 ms, transactions page 8 ms, costs 6 ms, loans 5 ms |
+| TC-U01 | NFR-02 | Playwright: all 9 app pages at 360, 768, 1280 and 1920 px | No horizontal page scrolling | ✅ 0 px overflow on all pages at all four widths |
+| TC-U03 | NFR-12 | (a) axe-core 4.10 (WCAG 2.1 A/AA + best practice) on 11 pages, light and dark theme; (b) Lighthouse 12 accessibility on login + 9 logged-in pages; (c) keyboard only: log in with the demo (Tab + Enter), open "Add transaction", close with Escape | No violations; score ≥ 90; everything reachable by keyboard | ✅ after fixes: 0 axe violations; Lighthouse accessibility **100** on every page. Fixed: focusable theme switch inside `aria-hidden` panel; dark-theme button contrast (new `--on-accent` token); warning badge contrast; card heading order (h3 → h2). Keyboard: login, dialog focus and Escape work |
+| TC-E2E03 | FR-37 – FR-43 | Log in with the demo → dashboard → Reports (Month, Lifetime, Life phase "Pre-departure") → Profile → "Download my data" → all pages; no console errors | Values plausible; export file downloaded; no errors | ✅ export `edufinance-export-<date>.json`; 0 console errors |
+| TC-U02 | NFR-03 | 3 first-time users record an expense (stopwatch) | Each ≤ 60 s | ⏳ to be run by the author with fellow students |
+| TC-D01 | NFR-10 | Clean machine: `docker compose up --build` | App on :8080 within 5 min | ⏳ run on the author's machine (no Docker daemon in the build environment; compose files validated with `docker compose config`) |
+| TC-D02 | NFR-13 | Uptime check of the cloud URL for 7 days | No downtime, no cold start | ⏳ after deployment ([deployment guide](../deployment.md)) |
+
+**Totals:** 102 backend tests (service coverage 96 %), 32 frontend tests, all passing.

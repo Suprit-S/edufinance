@@ -16,3 +16,4 @@ its consequences (format after M. Nygard). Status: *Accepted*, *Superseded* or *
 | [0009](0009-authentication.md) | Authentication with short-lived JWT and revocation list | Accepted |
 | [0010](0010-hosting.md) | Hosting on a cloud VM with Docker Compose | Accepted |
 | [0011](0011-remittance-transactions.md) | How a remittance becomes transactions | Accepted |
+| [0012](0012-reports-net-worth-and-charts.md) | Reports: net worth at today's rates, bar lists instead of donuts | Accepted |

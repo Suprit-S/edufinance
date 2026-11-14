@@ -3,7 +3,7 @@ serialise the result. All business rules live in ``app.services``."""
 
 from flask import Flask
 
-from . import auth, loans, meta, plan, profile, remittances, transactions, wallets
+from . import auth, loans, meta, plan, profile, remittances, reports, transactions, wallets
 
 API_PREFIX = "/api"
 
@@ -26,3 +26,4 @@ def register_blueprints(app: Flask) -> None:
     app.register_blueprint(remittances.bp, url_prefix=API_PREFIX)
     app.register_blueprint(plan.bp, url_prefix=API_PREFIX)
     app.register_blueprint(loans.bp, url_prefix=API_PREFIX)
+    app.register_blueprint(reports.bp, url_prefix=API_PREFIX)

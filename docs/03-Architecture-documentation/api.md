@@ -1,4 +1,4 @@
-# REST API Reference (v0.2.0)
+# REST API Reference (v0.3.0)
 
 Base URL: `/api`. JSON in and out. Money and exchange rates are **strings** (e.g. `"41.20"`,
 `"0.00939891"`) so no precision is lost. Dates are ISO `YYYY-MM-DD`.
@@ -107,3 +107,23 @@ future_interest, payoff_month, emi_covers_interest, repaid_pct`.
 `affordability` (null without a minimum part-payment): `status (AFFORDABLE|SAVE|NOT_AFFORDABLE),
 months_needed, avg_surplus, buffered_surplus, min_part_payment_base, interest_saved_if_paid,
 emis_saved_if_paid, lookback_months, buffer_pct, estimated_rate`.
+
+## Reports and dashboard (Sprint 3)
+
+All amounts are in the user's base currency, converted with the rates frozen on each transaction.
+`estimated_rates: true` means today's rates came from the cache or the fallback table.
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/reports?period=MONTH&value=2026-11` | Also `period=YEAR&value=2026`, `period=PHASE&value=<phase id>`, `period=LIFETIME` (planning start → today). → `{period {kind, start, end, label}, currency, earned, other_income (not earned, e.g. loan money), spent, net, by_source[], top_categories[] (top 5 + "Other"), by_phase[], monthly[] {month, earned, spent}}`. 422 for an unknown period, a malformed value or another user's phase |
+| GET | `/reports/costs` | `{going_abroad {total, by_group[]}, degree {total_so_far, until, complete, study_progress_pct, as_of}}` |
+| GET | `/reports/net-worth` | `{estimated_rates, points[] {month, assets, debt, net_worth}}` from planning start to this month, all at today's rates (ADR-0012) |
+| GET | `/reports/loans` | `{debt_free_month, loans[] {loan_id, name, payoff_month}, points[] {month, outstanding}}`, projected with the current EMIs |
+| GET | `/dashboard` | `{total_balance, wallets[] {id, name, currency_code, balance, balance_base, runway}, alerts[] (Warning/Critical wallets), this_month {month, target, earned, spent, still_to_earn, progress_pct}, loans {active, outstanding, emi_this_month, debt_free_month}, current_phase_id, spending_30d {total, categories[]}, estimated_rates}` |
+
+## Data rights (Sprint 3)
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/account/export` | JSON file download (`Content-Disposition: attachment`) with profile, phases, wallets, own categories, transactions, remittances, plan items, loans and payments. Never contains the password hash |
+| DELETE | `/account` | `{password}` → 204; deletes the user and all their data; the token stops working. 422 for a wrong password |

@@ -26,11 +26,12 @@
   --accent: #2e6e5a;          /* primary actions, positive values */
   --accent-hover: #255a4a;
   --accent-soft: #e5f0ec;
+  --on-accent: #ffffff;       /* text on accent buttons */
   --gold: #b9863e;            /* progress, highlights */
   --gold-soft: #f6eedf;
   --danger: #b23a48;
   --danger-soft: #fbe9eb;
-  --warning: #a8650b;
+  --warning: #8f5508;
   --warning-soft: #fdf1dc;
   --info: #2f5f9e;
   --info-soft: #e7eef8;
@@ -72,6 +73,7 @@
     --accent: #4fae8d;
     --accent-hover: #63c19f;
     --accent-soft: #1d3a32;
+    --on-accent: #0c1a15;
     --gold: #d6a65e;
     --gold-soft: #3a3020;
     --danger: #e0707d;
@@ -99,6 +101,7 @@
   --accent: #4fae8d;
   --accent-hover: #63c19f;
   --accent-soft: #1d3a32;
+  --on-accent: #0c1a15;
   --gold: #d6a65e;
   --gold-soft: #3a3020;
   --danger: #e0707d;

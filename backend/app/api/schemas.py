@@ -282,3 +282,7 @@ class LoanPaymentSchema(Schema):
     paid_on = fields.Date(required=True)
     wallet_id = fields.UUID(allow_none=True)
     note = fields.String(allow_none=True, validate=NOTE)
+
+
+class AccountDeleteSchema(Schema):
+    password = fields.String(required=True, validate=validate.Length(min=1, max=128))

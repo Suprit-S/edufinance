@@ -42,7 +42,9 @@ The overall decision is recorded in [ADR-0001](adr/0001-technology-stack.md).
 | [PostgreSQL 16](https://www.postgresql.org/) | Database | Exact NUMERIC, CHECK constraints, enums – ADR-0001 |
 | [Docker](https://www.docker.com/) / [Docker Compose](https://docs.docker.com/compose/) | Containers, one-command start | Same setup locally, in CI and in the cloud – NFR-10 |
 | [nginx](https://nginx.org/) | Serves the React build, proxies `/api` | Small, fast static server |
+| [Caddy](https://caddyserver.com/) | HTTPS reverse proxy in production | Automatic Let's Encrypt certificates, minimal config – ADR-0010 |
 | [GitHub](https://github.com/) + [GitHub Actions](https://docs.github.com/actions) | Version control, CI | Required by the assignment; free CI |
 | [ExchangeRate-API open access](https://www.exchangerate-api.com/docs/free) | Daily market rates | Free, no API key, 160+ currencies – ADR-0003 |
 | [Azure for Students](https://azure.microsoft.com/free/students) | Cloud VM hosting | Free credit without credit card, always on – ADR-0010 |
 | [PlantUML](https://plantuml.com/) | UML diagrams as code | Diagrams versioned with the code |
+| [axe-core](https://github.com/dequelabs/axe-core), [Lighthouse](https://developer.chrome.com/docs/lighthouse/), [Playwright](https://playwright.dev/) | Accessibility audits, browser tests, screenshots | Measurable checks for NFR-02 and NFR-12 |

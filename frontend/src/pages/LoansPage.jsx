@@ -54,7 +54,7 @@ export default function LoansPage() {
                 </span>
                 <span className="mono wallet-ccy">{l.annual_rate_pct}% p.a.</span>
               </div>
-              <h3>{l.name}</h3>
+              <h2>{l.name}</h2>
               <p className="stat-value">{formatMoney(l.outstanding_amount, l.currency_code)}</p>
               <p className="stat-sub">
                 outstanding of {formatMoney(l.sanctioned_amount, l.currency_code)} · EMI{' '}

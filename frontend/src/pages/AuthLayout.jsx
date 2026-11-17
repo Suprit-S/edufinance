@@ -4,7 +4,7 @@ import ThemeToggle from '../components/ThemeToggle'
 export default function AuthLayout({ title, lead, children }) {
   return (
     <div className="auth-page">
-      <aside className="auth-aside" aria-hidden="true">
+      <aside className="auth-aside" aria-label="About EduFinance">
         <p className="brand">
           Edu <span>Finance</span>
         </p>

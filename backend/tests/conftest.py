@@ -48,6 +48,8 @@ def _clean_user_data(app):
     for table in USER_TABLES:
         where = " WHERE user_id IS NOT NULL" if table == "categories" else ""
         db.session.execute(text(f"DELETE FROM {table}{where}"))
+    # cached market rates of one test (e.g. the demo rate history) must not leak
+    db.session.execute(text("DELETE FROM fx_rates WHERE source = 'API'"))
     db.session.commit()
 
 
@@ -120,7 +122,7 @@ def api_rates(app):
         db.session.commit()
 
     yield _store
-    db.session.execute(text("DELETE FROM fx_rates WHERE source = 'API'"))
+    db.session.execute(text("DELETE FROM fx_rates WHERE source = 'API'"))  # also demo rates
     db.session.commit()
 
 

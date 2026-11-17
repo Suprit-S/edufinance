@@ -92,7 +92,7 @@ function WalletCard({ wallet }) {
         <span className="badge badge-neutral">{humanize(wallet.wallet_type)}</span>
         <span className="mono wallet-ccy">{wallet.currency_code}</span>
       </div>
-      <h3>{wallet.name}</h3>
+      <h2>{wallet.name}</h2>
       <p className={`stat-value ${negative ? 'neg' : ''}`}>{formatMoney(wallet.balance, wallet.currency_code)}</p>
       <p className="stat-sub">Current balance</p>
       {wallet.runway && (

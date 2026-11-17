@@ -75,3 +75,11 @@ def _register_cli(app: Flask) -> None:
 
         counts = seed_master_data()
         click.echo(f"Master data seeded: {counts}")
+
+    @app.cli.command("seed-demo")
+    @click.option("--reset", is_flag=True, help="Delete and recreate the demo user.")
+    def seed_demo(reset):
+        """Create the demo user Ananya Rao with realistic data up to today."""
+        from .seed.demo_data import seed_demo as run
+
+        click.echo(run(reset=reset))

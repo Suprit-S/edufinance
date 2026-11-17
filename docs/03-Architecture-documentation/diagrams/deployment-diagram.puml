@@ -8,6 +8,9 @@ node "User device" {
 
 node "Cloud VM (Azure for Students, Ubuntu)" <<device>> {
   node "Docker Engine" <<execution environment>> {
+    node "caddy container\ncaddy 2.8" as caddy {
+      artifact "Caddyfile\n(TLS, security headers)"
+    }
     node "frontend container\nnginx 1.27" as fe {
       artifact "React build (static files)"
     }
@@ -15,14 +18,17 @@ node "Cloud VM (Azure for Students, Ubuntu)" <<device>> {
       artifact "Flask app (wsgi:app)"
     }
     node "db container\npostgres 16" as dbc {
-      database "edufinance DB" as dbvol
+      database "edufinance DB\n(volume db_data)" as dbvol
     }
   }
 }
 
 cloud "Exchange-rate API" as fx
+cloud "Let's Encrypt" as le
 
-browser --> fe : HTTPS :443\n(reverse proxy, Sprint 3)
+browser --> caddy : HTTPS :443
+caddy --> fe : HTTP :80
+caddy ..> le : certificate (ACME)
 fe --> be : HTTP :5000 /api/*
 be --> dbvol : TCP :5432
 be --> fx : HTTPS

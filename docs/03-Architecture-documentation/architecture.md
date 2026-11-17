@@ -72,7 +72,8 @@ context, and one Axios API client that adds the token and normalises errors.
 | `plan_service` | Monthly plan, minimum target, Target to Earn | 2 |
 | `loan_service` | Payments, split, payoff simulation, interest saved, affordability | 2 |
 | `runway_service` | Burn rate, runway, status | 2 |
-| `report_service` | Period reports, cost reports, net-worth timeline | 3 |
+| `report_service` | Period reports, cost reports, net-worth and loan timelines, dashboard | 3 |
+| `account_service` | Data export (JSON) and account deletion | 3 |
 
 ## 6. Data model
 
@@ -120,12 +121,15 @@ the extra payment, then frozen on the payment (ADR-0007).
 
 | Container | Image | Port | Notes |
 |---|---|---|---|
-| frontend | nginx 1.27 (multi-stage build from node 22) | 80 → host 8080 | Serves static files, proxies `/api` |
-| backend | python 3.12-slim + gunicorn | 5000 (internal) | Runs migrations + seed on start |
+| caddy *(production only)* | caddy 2.8-alpine | 80, 443 public | HTTPS with automatic Let's Encrypt certificate, security headers, proxy to frontend |
+| frontend | nginx 1.27 (multi-stage build from node 22) | 80 (local: → host 8080) | Serves static files, proxies `/api` |
+| backend | python 3.12-slim + gunicorn | 5000 (internal) | Runs migrations, master seed and (optional) demo seed on start |
 | db | postgres 16-alpine | 5432 (internal) | Named volume `db_data` |
 
-Cloud: Azure for Students Ubuntu VM with the same compose file and a Caddy reverse proxy for HTTPS
-(ADR-0010, guide in Sprint 3).
+Locally, `docker-compose.yml` alone starts the app on port 8080. In the cloud (Azure for Students,
+Ubuntu VM, ADR-0010), `docker-compose.prod.yml` is added on top: it adds Caddy, removes the
+published frontend port and requires real secrets. Step-by-step instructions:
+[deployment guide](../deployment.md).
 
 ## 9. Cross-cutting concepts
 

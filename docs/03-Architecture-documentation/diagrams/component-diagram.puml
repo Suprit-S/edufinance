@@ -31,7 +31,7 @@ package "Backend (Flask)" {
     [remittances] as RRemit
     [monthly plan & target] as RPlan
     [loans] as RLoans
-    [reports & dashboard] as RReports
+    [reports, dashboard\n& account] as RReports
     [meta (health, master data)] as RMeta
   }
 
@@ -45,6 +45,7 @@ package "Backend (Flask)" {
     [LoanService] as SLoan
     [RunwayService] as SRunway
     [ReportService] as SReport
+    [AccountService\n(export, delete)] as SAccount
     [money (Decimal helpers)] as SMoney
   }
 
@@ -62,6 +63,7 @@ package "Backend (Flask)" {
   RLoans ..> SLoan
   RReports ..> SReport
   RReports ..> SRunway
+  RReports ..> SAccount
   RMeta ..> Models
 
   STxn ..> SFx
@@ -73,6 +75,7 @@ package "Backend (Flask)" {
   SLoan ..> SPlan
   SReport ..> SFx
   SReport ..> SPlan
+  SReport ..> SLoan
 
   SAuth ..> Models
   SPhase ..> Models
@@ -82,6 +85,7 @@ package "Backend (Flask)" {
   SLoan ..> Models
   SReport ..> Models
   SRunway ..> Models
+  SAccount ..> Models
   SFx ..> SMoney
   SLoan ..> SMoney
   Alembic ..> Models

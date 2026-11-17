@@ -10,6 +10,7 @@ Sorted alphabetically.
 | **Category** | A label for income or expenses (e.g. *Rent*, *Part-time salary*). System categories are predefined; users can add their own. |
 | **Cost of going abroad** | Total spending in the phases *Pre-departure* and *Settling in*. |
 | **Cost of the degree** | Total spending from planning start until the study end date. |
+| **Demo account** | A built-in example user (*Ananya Rao*, India → Germany) with about 300 realistic transactions, loans and a plan, so that the app can be explored without entering data. Login `demo@edufinance.app` / `Demo#2026`. |
 | **Earned** | Income that counts towards the Target to Earn: salary, family support, scholarships, refunds. Not earned: loan disbursements and transfers between own wallets. |
 | **Effective rate** | The exchange rate a student really got in a transfer: amount received ÷ amount sent. It includes the provider's margin. |
 | **EMI (Equated Monthly Instalment)** | The fixed monthly loan payment that covers interest and principal. |
@@ -24,8 +25,11 @@ Sorted alphabetically.
 | **Minimum part-payment** | The smallest extra repayment the student wants to make on a loan; set per loan and used by the affordability check. |
 | **Monthly Plan** | The list of recurring monthly obligations (rent, insurance, EMIs, …). |
 | **Moratorium** | A period (usually during studies) in which no EMI is due on an education loan, while interest may still accrue. |
+| **Net worth** | All wallet balances minus all outstanding loans, converted to the base currency at today's exchange rates (ADR-0012). |
 | **Outstanding amount** | The loan principal still owed. Maintained by the user and reduced automatically by recorded payments. |
 | **Part-payment (prepayment)** | An extra payment towards a loan's principal in addition to the EMI; it shortens the loan and saves interest. |
+| **Payoff month** | The month in which a loan's outstanding amount reaches zero if the current EMI is paid every month. |
+| **Period** | The time span of a report: one month, one calendar year, one life phase or the lifetime (from planning start until today). |
 | **Plan vs. actual** | Comparison of each Monthly Plan line with what was really paid in the month. |
 | **Proof of funds (blocked account)** | Money a student must deposit before the visa is granted (in Germany a *Sperrkonto*), released in monthly amounts after arrival. |
 | **Rate freezing** | Saving the exchange rate with a transaction permanently, so past values never change when market rates change. |

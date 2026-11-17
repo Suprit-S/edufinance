@@ -5,6 +5,7 @@ import {
   Legend,
   Line,
   LineChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -124,6 +125,55 @@ export function LoanBalanceChart({ schedule, currency, startMonth }) {
             formatter={(v) => [formatMoney(v, currency), 'Outstanding']}
           />
           <Line dataKey="balance" stroke="var(--series-1)" strokeWidth={2} dot={false} activeDot={{ r: 4 }} animationDuration={400} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  )
+}
+
+/** Earned and spent per month (bars), one axis, one currency. */
+export function EarnedSpentChart({ monthly, currency }) {
+  const data = monthly.map((m) => ({
+    month: monthLabel(m.month, monthly.length > 6),
+    full: monthLabel(m.month),
+    Earned: Number(m.earned),
+    Spent: Number(m.spent),
+  }))
+  return (
+    <div className="chart-box" role="img" aria-label="Earned and spent per month">
+      <ResponsiveContainer width="100%" height={260}>
+        <ComposedChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }} barGap={2}>
+          <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
+          <XAxis dataKey="month" {...axis} minTickGap={8} />
+          <YAxis {...axis} width={56} tickFormatter={(v) => compact(v, currency)} />
+          <Tooltip
+            {...tooltipStyle}
+            cursor={{ fill: 'var(--surface-muted)' }}
+            labelFormatter={(_, p) => p?.[0]?.payload.full}
+            formatter={(v, name) => [formatMoney(v, currency), name]}
+          />
+          <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 13, color: 'var(--text-muted)' }} />
+          <Bar dataKey="Earned" fill="var(--series-1)" radius={[4, 4, 0, 0]} maxBarSize={18} animationDuration={400} />
+          <Bar dataKey="Spent" fill="var(--series-2)" radius={[4, 4, 0, 0]} maxBarSize={18} animationDuration={400} />
+        </ComposedChart>
+      </ResponsiveContainer>
+    </div>
+  )
+}
+
+/** A single series over months (net worth, total loan balance). */
+export function MonthLineChart({ points, valueKey, name, currency, zeroLine = false }) {
+  const data = points.map((p) => ({ label: monthLabel(p.month), value: Number(p[valueKey]) }))
+  return (
+    <div className="chart-box" role="img" aria-label={name}>
+      <ResponsiveContainer width="100%" height={240}>
+        <LineChart data={data} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
+          <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
+          <XAxis dataKey="label" {...axis} minTickGap={40} />
+          <YAxis {...axis} width={60} tickFormatter={(v) => compact(v, currency)} />
+          <Tooltip {...tooltipStyle} formatter={(v) => [formatMoney(v, currency), name]} />
+          {zeroLine && <ReferenceLine y={0} stroke="var(--chart-ref)" strokeDasharray="4 4" />}
+          <Line dataKey="value" stroke="var(--series-1)" strokeWidth={2} dot={false} activeDot={{ r: 4 }} animationDuration={400} />
         </LineChart>
       </ResponsiveContainer>
     </div>

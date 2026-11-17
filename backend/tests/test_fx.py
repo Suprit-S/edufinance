@@ -93,3 +93,16 @@ def test_fetch_usd_rates_handles_errors(app, monkeypatch):
         assert fx_service.fetch_usd_rates() == {"EUR": Decimal("0.86")}
     finally:
         app.config["FX_API_URL"] = ""
+
+
+def test_tc_fx07_api_rate_on_fallback_date_keeps_fallback_table(app, api_rates, monkeypatch):
+    """Regression: a real rate fetched on 2026-01-01 must not replace the
+    fallback table row of that date (migration 0002)."""
+    from app.seed.master_data import FALLBACK_RATE_DATE
+
+    api_rates(on=FALLBACK_RATE_DATE, eur="0.80", inr="88")
+    assert fx_service.get_rate("EUR", "INR", FALLBACK_RATE_DATE).rate == Decimal("110.00000000")
+    monkeypatch.setattr(fx_service, "fetch_usd_rates", lambda: {})
+    api_rates(on=date.today() - timedelta(days=30))
+    later = fx_service.get_rate("EUR", "INR", date.today())
+    assert later.rate == Decimal("106.06060606") and later.estimated  # fallback still there

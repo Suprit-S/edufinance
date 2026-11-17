@@ -102,8 +102,13 @@ class FxRate(UUIDPkMixin, Base):
 
     __tablename__ = "fx_rates"
     __table_args__ = (
+        # One API rate and one fallback rate may exist for the same pair and day.
         UniqueConstraint(
-            "base_currency", "quote_currency", "rate_date", name="uq_fx_rates_pair_date"
+            "base_currency",
+            "quote_currency",
+            "rate_date",
+            "source",
+            name="uq_fx_rates_pair_date_source",
         ),
         CheckConstraint("rate > 0", name="rate_positive"),
     )

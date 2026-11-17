@@ -34,7 +34,7 @@ Priority: **M** = must, **S** = should, **C** = could (MoSCoW).
 | ID | Requirement | Prio | US |
 |---|---|---|---|
 | FR-07 | On registration the system shall create the phases *Pre-departure* (planning start → day before arrival), *Settling in* (arrival + configurable number of days, default 60), *Study* (study start → study end) and *Work* (after study end, open-ended). | M | US-03 |
-| FR-08 | The user shall be able to rename phases, change their dates, and add custom phases such as *Job search*. | M | US-03 |
+| FR-08 | The user shall be able to rename phases and add, re-date and delete custom phases such as *Job search*. The dates of the four system phases follow the journey dates in the profile. | M | US-03 |
 | FR-09 | Every transaction shall belong to exactly one phase, determined by its date unless the user chose a phase explicitly. Where phases overlap, the shorter (more specific) phase applies. | M | US-03 |
 | FR-10 | When phase dates change, transactions whose phase was determined by date shall be re-assigned; manually assigned transactions shall keep their phase. | M | US-03 |
 
@@ -49,7 +49,7 @@ Priority: **M** = must, **S** = should, **C** = could (MoSCoW).
 | FR-15 | Exchange rates stored with a transaction shall never change afterwards, even if market rates change. | M | US-06 |
 | FR-16 | When recording a foreign-currency transaction, the system shall propose the current market rate and let the user overwrite it. | M | US-06 |
 | FR-17 | The system shall show each wallet's current balance (opening balance plus all its transactions). | M | US-04 |
-| FR-18 | The user shall be able to move money between two own wallets without it counting as income or expense. | S | US-04 |
+| FR-18 | The user shall be able to move money between two own wallets without it counting as income or expense (delivered with remittances, Sprint 2). | S | US-07 |
 | FR-19 | Only known currencies and existing categories shall be accepted. | M | US-05 |
 
 ### 2.4 Remittances (international transfers)

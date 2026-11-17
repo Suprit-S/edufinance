@@ -14,13 +14,22 @@ application, through settling in and studying, to job search, work and the last 
 
 | Area | What it does | Status |
 |---|---|---|
-| Life phases | Pre-departure, settling in, study, job search, work – every transaction belongs to one | Sprint 1 |
-| Wallets & transactions | Any currency; exchange rate frozen on every entry | Sprint 1 |
+| Accounts | Register with currencies and journey dates, login/logout, profile, password | ✅ v0.1.0 |
+| Life phases | Pre-departure, settling in, study, job search, work – every transaction belongs to one | ✅ v0.1.0 |
+| Wallets & transactions | Any currency; exchange rate frozen on every entry; filters and search | ✅ v0.1.0 |
 | Remittances | Enter amount sent and received → real rate and hidden cost | Sprint 2 |
 | Monthly plan & Target to Earn | Fixed costs incl. loan EMIs → minimum monthly earning target | Sprint 2 |
 | Loan planner | EMIs, part-payments, interest saved, payoff, part-payment affordability | Sprint 2 |
 | Runway | Days of money left per wallet with status and alerts | Sprint 2 |
 | Reports & dashboard | Month / year / phase / lifetime; cost of going abroad; net worth | Sprint 3 |
+
+## Screenshots
+
+| Transactions | Add an expense in INR |
+|---|---|
+| ![Transactions](docs/screenshots/sprint1-transactions.png) | ![Add expense](docs/screenshots/sprint1-add-expense.png) |
+
+More in [docs/screenshots](docs/screenshots/).
 
 ## Quick start (Docker)
 
@@ -37,7 +46,8 @@ Open **http://localhost:8080**. Health check: http://localhost:8080/api/health
 
 The backend applies database migrations and seeds master data automatically on every start.
 
-Demo login (available from Sprint 3): `demo@edufinance.app` / `Demo#2026`
+Create your own account on the start page ("Create an account"). A demo login
+(`demo@edufinance.app` / `Demo#2026`) with realistic data follows in Sprint 3.
 
 Stop: `Ctrl+C`, then `docker compose down` (add `-v` to delete the database volume).
 
@@ -113,7 +123,7 @@ edufinance/
 
 * [Project plan (Scrum, backlog, sprints)](docs/01-Project-management/project-plan.md)
 * [Requirements](docs/02-Requirements/requirements.md) · [Glossary](docs/02-Requirements/glossary.md)
-* [Architecture](docs/03-Architecture-documentation/architecture.md) · [Decisions (ADRs)](docs/03-Architecture-documentation/adr/README.md) · [Tech stack](docs/03-Architecture-documentation/tech-stack.md)
+* [Architecture](docs/03-Architecture-documentation/architecture.md) · [REST API](docs/03-Architecture-documentation/api.md) · [Decisions (ADRs)](docs/03-Architecture-documentation/adr/README.md) · [Tech stack](docs/03-Architecture-documentation/tech-stack.md)
 * [Technical debt](docs/technical-debt.md) · [Changelog](CHANGELOG.md)
 
 ## Third-party software

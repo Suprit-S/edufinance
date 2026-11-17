@@ -62,7 +62,9 @@ context, and one Axios API client that adds the token and normalises errors.
 | Service | Responsibility | Sprint |
 |---|---|---|
 | `money` | Decimal helpers (rounding, conversion) | skeleton |
-| `auth_service` | Register, login, logout, password change | 1 |
+| `auth_service` | Register, login, logout, password change, profile update | 1 |
+| `wallet_service` | Wallets, balances | 1 |
+| `category_service` | System and custom categories | 1 |
 | `phase_service` | Create/sync phases, assign phases to transactions | 1 |
 | `fx_service` | Market rate lookup: cache → API → stale cache → fallback | 1 |
 | `transaction_service` | Create/edit/delete transactions with frozen rates; wallet balances | 1 |
@@ -82,8 +84,16 @@ All money columns are `NUMERIC(14,2)`, rates `NUMERIC(18,8)`.
 
 ## 7. Runtime view
 
-Sequence diagrams for "record remittance" and "record loan part-payment" are added in Sprint 2.
-Request flow in general:
+### 7.1 Record a foreign-currency expense (Sprint 1)
+
+![Record expense](diagrams/png/seq-record-expense.png)
+
+The market rate is shown to the user before saving; the server freezes the rate actually used
+(user-entered or market) together with the converted values (ADR-0003).
+
+Sequence diagrams for "record remittance" and "record loan part-payment" follow in Sprint 2.
+
+### 7.2 Request flow in general
 
 1. Browser → nginx (`/api/...`) → gunicorn/Flask.
 2. JWT is verified and the revocation list checked.
@@ -115,11 +125,15 @@ Cloud: Azure for Students Ubuntu VM with the same compose file and a Caddy rever
   with text label.
 * **Testing** – pytest against PostgreSQL (migrations included), Vitest for UI logic, CI on every push.
 
-## 10. Architecture decisions
+## 10. API
+
+See the [REST API reference](api.md).
+
+## 11. Architecture decisions
 
 See [adr/](adr/README.md).
 
-## 11. Risks and technical debt
+## 12. Risks and technical debt
 
 See [technical-debt.md](../technical-debt.md) and the risk table in the
-[project plan](../01-Project-management/project-plan.md#8-risks).
+[project plan](../01-Project-management/project-plan.md#7-risks).

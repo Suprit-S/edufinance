@@ -6,15 +6,16 @@ verify it. Updated at the end of every sprint. *Planned* modules are named as in
 
 | Requirement | User story | Backend | Frontend | Test cases | Sprint |
 |---|---|---|---|---|---|
-| FR-01, FR-02 | US-01 | `api/auth`, `services/auth_service` | Register page | TC-A01–A03, TC-S07 | 1 |
-| FR-03 | US-01 | `models/user.User.age_on` | Profile page | TC-S08 | skeleton |
-| FR-04, FR-06 | US-02 | `api/auth`, `services/auth_service` | Login page | TC-A04, TC-SEC02 | 1 |
-| FR-05 | US-01 | `api/profile` | Profile page | TC-PH04 | 1 |
-| FR-07 – FR-10 | US-03 | `services/phase_service` | Profile & Phases | TC-PH01–PH04 | 1 |
-| FR-11, FR-17, FR-18 | US-04 | `api/wallets`, `services/transaction_service` | Wallets | TC-W01 | 1 |
-| FR-12, FR-19 | US-05 | `seed/master_data`, `api/categories` | Category picker | TC-S02, TC-S05, TC-T04 | skeleton / 1 |
-| FR-13 | US-05 | `api/transactions` | Wallet detail | TC-T01 | 1 |
-| FR-14 – FR-16 | US-06 | `services/fx_service`, `services/money` | Transaction form | TC-M04, TC-M05, TC-T01–T03, TC-FX01–FX04 | skeleton / 1 |
+| FR-01, FR-02 | US-01 | `api/auth.py`, `api/schemas.py`, `services/auth_service.py` | `RegisterPage` | TC-A01–A03c, TC-S07, TC-E2E01 | 1 ✅ |
+| FR-03 | US-01 | `models/user.User.age_on` | `ProfilePage` | TC-S08, TC-A07 | ✅ |
+| FR-04, FR-06 | US-02 | `api/auth.py`, `services/auth_service.py` | `LoginPage`, `ProfilePage` (password) | TC-A04–A06, TC-SEC02, TC-F08, TC-F09 | 1 ✅ |
+| FR-05 | US-01 | `api/profile.py`, `auth_service.update_profile` | `ProfilePage` | TC-PH04 | 1 ✅ |
+| FR-07 – FR-10 | US-03 | `services/phase_service.py`, `api/profile.py` | `ProfilePage` | TC-PH01–PH08 | 1 ✅ |
+| FR-11, FR-17 | US-04 | `api/wallets.py`, `services/wallet_service.py` | `WalletsPage`, `WalletDetailPage`, `WalletForm` | TC-W01–W03 | 1 ✅ |
+| FR-18 | US-07 | `services/remittance_service.py` | Remittances | TC-R0x | 2 |
+| FR-12, FR-19 | US-05 | `seed/master_data.py`, `services/category_service.py`, `api/schemas.py` | `TransactionForm` | TC-S02, TC-S05, TC-C01, TC-A03, TC-T04 | 1 ✅ |
+| FR-13 | US-05 | `api/transactions.py`, `services/transaction_service.py` | `TransactionsPage`, `TransactionForm`, `TransactionList` | TC-T04, TC-T08, TC-F06 | 1 ✅ |
+| FR-14 – FR-16 | US-06 | `services/fx_service.py`, `services/transaction_service.py`, `services/money.py` | `TransactionForm` (rate pre-fill) | TC-M04, TC-M05, TC-T01–T03, TC-T05–T07, TC-FX01–FX06, TC-F07 | 1 ✅ |
 | FR-20 – FR-22 | US-07 | `services/remittance_service` | Remittances | TC-R01–R03 | 2 |
 | FR-23 – FR-25 | US-08 | `services/plan_service` | Monthly Plan | TC-PL01, TC-PL02 | 2 |
 | FR-26, FR-27 | US-09 | `services/plan_service` | Target to Earn | TC-S06, TC-TE01, TC-TE02 | 2 |
@@ -28,8 +29,8 @@ verify it. Updated at the end of every sprint. *Planned* modules are named as in
 | NFR-01 | US-14 | – | – | TC-P01 | 3 |
 | NFR-02, NFR-12 | US-18 | – | design system (`styles/`) | TC-F03, TC-U01, TC-U03 | skeleton / 3 |
 | NFR-03 | US-05 | – | Transaction form | TC-U02 | 3 |
-| NFR-04 – NFR-07 | US-02 | JWT config, `revoked_tokens`, ownership checks | API client | TC-SEC01–SEC04 | 1 |
-| NFR-08 | US-06 | `services/fx_service` | "estimated" label | TC-FX03, TC-FX04 | 1 |
+| NFR-04 – NFR-07 | US-02 | `auth_service`, JWT callbacks in `app/__init__.py`, `require_auth`, `get_*` ownership checks | `api/client.js` (401 → logout) | TC-SEC01–SEC04 | 1 ✅ |
+| NFR-08 | US-06 | `services/fx_service.py` | "est." tag, rate hint | TC-FX03, TC-FX04, TC-E2E01 | 1 ✅ |
 | NFR-09 | – | `services/money`, NUMERIC columns | `lib/format` | TC-M01–M07, TC-S09, TC-F01 | skeleton |
 | NFR-10, NFR-13 | US-17 | `docker-compose.yml`, Dockerfiles | nginx | TC-S01, TC-D01, TC-D02 | skeleton / 3 |
 | NFR-11 | – | CI workflow | CI workflow | coverage report | all |

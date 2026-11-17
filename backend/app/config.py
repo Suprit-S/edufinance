@@ -24,7 +24,7 @@ class Config:
     SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
 
     # --- Authentication (NFR4: session expires after 60 min) ----------------
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "dev-only-jwt-change-me")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "dev-only-jwt-secret-change-me-in-production")
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=_env_int("JWT_EXPIRES_MINUTES", 60))
     JWT_TOKEN_LOCATION = ["headers"]
 

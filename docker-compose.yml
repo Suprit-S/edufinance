@@ -25,7 +25,7 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-edufinance}:${POSTGRES_PASSWORD:-edufinance}@db:5432/${POSTGRES_DB:-edufinance}
       SECRET_KEY: ${SECRET_KEY:-dev-only-change-me}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-dev-only-jwt-change-me}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-dev-only-jwt-secret-change-me-in-production}
       SEED_DEMO: ${SEED_DEMO:-true}
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5000/api/health')\""]

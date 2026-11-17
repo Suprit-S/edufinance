@@ -12,3 +12,6 @@ Updated every sprint.
 | TD-05 | No refresh token; re-login after 60 minutes | Simplicity (ADR-0009) | Minor inconvenience | Refresh token in httpOnly cookie |
 | TD-06 | No bank-account import or CSV import | Out of scope | Manual entry | CSV import of bank statements |
 | TD-07 | Single user per account (no family sharing) | Out of scope (CR-05) | – | Shared wallets with roles |
+| TD-08 | No rate limiting on login | Not in Sprint 1 scope | Password guessing is only slowed by bcrypt | Flask-Limiter on `/api/auth/login` |
+| TD-09 | Back-dated foreign-currency entries get an estimated rate | Free provider has no historical rates | Values marked "est." until the user enters the real rate | Historical-rate provider or bulk "update estimated rates" action |
+| TD-10 | Wallet balances are shown in their own currency only; no total in base currency yet | Planned for the Sprint 3 dashboard | – | Dashboard total with current rates |

@@ -647,3 +647,150 @@ select.input {
     display: none;
   }
 }
+
+/* ---------- Sprint 2 ---------- */
+.table-wrap {
+  /* positioned, so visually-hidden labels inside cannot widen the page */
+  position: relative;
+  overflow-x: auto;
+  margin: 0 calc(var(--space-2) * -1);
+  padding: 0 var(--space-2);
+}
+
+.table-wrap .table {
+  min-width: 560px;
+}
+
+.segmented-wrap {
+  flex-wrap: wrap;
+}
+
+.month-picker {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.month-picker .input {
+  width: 170px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: var(--space-5);
+  align-items: center;
+}
+
+@media (max-width: 760px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hero-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2rem, 1.4rem + 2.2vw, 3rem);
+  font-weight: 500;
+  line-height: 1.1;
+  margin: var(--space-2) 0;
+}
+
+.hero-value.good {
+  color: var(--accent);
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+}
+
+.kv dt {
+  color: var(--text-muted);
+}
+
+.kv dd {
+  margin: 0;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart {
+  margin: 0;
+}
+
+.chart-box {
+  width: 100%;
+  min-width: 0;
+}
+
+.chart-table summary,
+.schedule summary {
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: var(--space-3);
+}
+
+.verdict {
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.verdict-good {
+  background: var(--accent-soft);
+}
+
+.verdict-save {
+  background: var(--gold-soft);
+}
+
+.verdict-none {
+  background: var(--surface-muted);
+}
+
+.verdict strong {
+  font-size: 1.05rem;
+}
+
+.loan-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  text-decoration: none;
+  color: inherit;
+}
+
+.loan-card:hover {
+  border-color: var(--accent);
+}
+
+.alert-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.alert-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.locked {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}

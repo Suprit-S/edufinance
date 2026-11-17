@@ -10,4 +10,4 @@ Tutor feedback on the Phase 1 submission. Each point and where it is resolved:
 | 4 | The component diagram should use a standard notation such as UML. | UML 2 component diagram with components, provided/required interfaces and dependencies. | [component-diagram.puml](../03-Architecture-documentation/diagrams/component-diagram.puml) |
 | 5 | Briefly explain why this technology stack and not an alternative. | Each technology is compared with named alternatives, with the reason for the choice. | [tech-stack.md](../03-Architecture-documentation/tech-stack.md), [ADR-0001](../03-Architecture-documentation/adr/0001-technology-stack.md) |
 | 6 | Specify exact test cases with input values and expected behaviour. | Test-case catalogue with ID, requirement, input, expected result and the automated test that runs it. | [test-cases.md](../02-Requirements/test-cases.md) |
-| 7 | The glossary must be sorted alphabetically. | Glossary sorted A–Z and extended. | [glossary.md](../02-Requirements/glossary.md)
+| 7 | The glossary must be sorted alphabetically. | Glossary sorted A–Z and extended. | [glossary.md](../02-Requirements/glossary.md) |

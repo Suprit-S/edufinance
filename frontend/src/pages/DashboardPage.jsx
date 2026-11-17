@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/useAuth'
 import ComingSoon from '../components/ComingSoon'
 import PageHeader from '../components/PageHeader'
+import RunwayBadge from '../components/RunwayBadge'
 import { formatDate, formatMoney } from '../lib/format'
 import { useFinanceData } from '../lib/useFinanceData'
 
@@ -15,6 +16,7 @@ export default function DashboardPage() {
   const current = user.phases.find((p) => p.is_current)
   const active = wallets.filter((w) => !w.is_archived)
   const firstName = user.full_name.split(' ')[0]
+  const alerts = active.filter((w) => w.runway && ['WARNING', 'CRITICAL'].includes(w.runway.status))
 
   return (
     <>
@@ -28,6 +30,20 @@ export default function DashboardPage() {
           </Link>
         }
       />
+
+      {alerts.length > 0 && (
+        <section className="alert alert-warning" role="alert" aria-label="Low funds">
+          <strong>Low funds:</strong>
+          <ul className="alert-list">
+            {alerts.map((w) => (
+              <li key={w.id}>
+                <Link to={`/wallets/${w.id}`}>{w.name}</Link>
+                <RunwayBadge runway={w.runway} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <div className="grid grid-2">
         <section className="card">
@@ -87,7 +103,6 @@ export default function DashboardPage() {
         features={[
           `Total balance across all wallets in ${user.base_currency}`,
           'Earned this month vs. minimum target',
-          'Low-funds alerts and wallet runway',
           'Loan summary and 30-day spending chart',
         ]}
       />

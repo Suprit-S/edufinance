@@ -24,3 +24,14 @@ every month, so they must be part of the target.
 ## Consequences
 The target reflects real obligations, and the affordability hint is conservative. It is an
 estimate, labelled as such in the UI, not financial advice.
+
+## Addendum (Sprint 2)
+* **Plan vs. actual:** for normal plan lines, "actual" = expenses in the line's category in that
+  month (lines sharing a category show the same actual). For an EMI line, actual = EMIs recorded
+  for that loan in the month; part-payments are extra and not part of the plan.
+* **Exchange rate for targets:** current and future months use today's rate, past months the rate
+  of the month's first day (estimated when no rate was cached then). The page says when a rate was
+  estimated.
+* **Plan items limited to a phase** count in a month only if the month overlaps that phase.
+* **Surplus** for the affordability check = earned − spent of each of the last 3 *complete* months
+  (the current month is excluded because it is not finished).

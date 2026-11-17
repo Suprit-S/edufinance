@@ -15,3 +15,8 @@ Updated every sprint.
 | TD-08 | No rate limiting on login | Not in Sprint 1 scope | Password guessing is only slowed by bcrypt | Flask-Limiter on `/api/auth/login` |
 | TD-09 | Back-dated foreign-currency entries get an estimated rate | Free provider has no historical rates | Values marked "est." until the user enters the real rate | Historical-rate provider or bulk "update estimated rates" action |
 | TD-10 | Wallet balances are shown in their own currency only; no total in base currency yet | Planned for the Sprint 3 dashboard | – | Dashboard total with current rates |
+| TD-11 | A remittance cannot be edited, only deleted and recorded again | Keeps linked transactions consistent | One extra step for corrections | Edit = delete + recreate in one transaction |
+| TD-12 | Loan payments only from a wallet in the loan currency | Avoids a second, hidden exchange rate | Cross-currency EMI needs a remittance first | Payment with an embedded remittance |
+| TD-13 | Hidden cost uses the market rate of the cache/fallback; back-dated transfers compare against an estimated rate | Free provider has no history | Hidden cost of old transfers is approximate | Historical-rate provider |
+| TD-14 | Plan lines sharing one category show the same "actual" | No link from a transaction to a plan line | Slightly misleading actuals when two lines share a category | Optional plan-line link on transactions |
+

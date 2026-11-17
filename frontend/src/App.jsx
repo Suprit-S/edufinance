@@ -1,15 +1,25 @@
+import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import RequireAuth from './auth/RequireAuth'
 import Layout from './components/Layout'
 import DashboardPage from './pages/DashboardPage'
+import LoansPage from './pages/LoansPage'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
 import PlaceholderPage from './pages/PlaceholderPage'
+import PlanPage from './pages/PlanPage'
 import ProfilePage from './pages/ProfilePage'
 import RegisterPage from './pages/RegisterPage'
+import RemittancesPage from './pages/RemittancesPage'
 import TransactionsPage from './pages/TransactionsPage'
 import WalletDetailPage from './pages/WalletDetailPage'
 import WalletsPage from './pages/WalletsPage'
+
+// Pages with charts load the chart library only when opened (smaller first load).
+const LoanDetailPage = lazy(() => import('./pages/LoanDetailPage'))
+const TargetPage = lazy(() => import('./pages/TargetPage'))
+
+const loading = <p className="status-line">Loading…</p>
 
 export default function App() {
   return (
@@ -23,10 +33,11 @@ export default function App() {
           <Route path="wallets" element={<WalletsPage />} />
           <Route path="wallets/:walletId" element={<WalletDetailPage />} />
           <Route path="profile" element={<ProfilePage />} />
-          <Route path="plan" element={<PlaceholderPage page="plan" />} />
-          <Route path="target" element={<PlaceholderPage page="target" />} />
-          <Route path="remittances" element={<PlaceholderPage page="remittances" />} />
-          <Route path="loans" element={<PlaceholderPage page="loans" />} />
+          <Route path="plan" element={<PlanPage />} />
+          <Route path="target" element={<Suspense fallback={loading}><TargetPage /></Suspense>} />
+          <Route path="remittances" element={<RemittancesPage />} />
+          <Route path="loans" element={<LoansPage />} />
+          <Route path="loans/:loanId" element={<Suspense fallback={loading}><LoanDetailPage /></Suspense>} />
           <Route path="reports" element={<PlaceholderPage page="reports" />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>

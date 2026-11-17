@@ -91,15 +91,28 @@ All money columns are `NUMERIC(14,2)`, rates `NUMERIC(18,8)`.
 The market rate is shown to the user before saving; the server freezes the rate actually used
 (user-entered or market) together with the converted values (ADR-0003).
 
-Sequence diagrams for "record remittance" and "record loan part-payment" follow in Sprint 2.
+### 7.2 Record a remittance (Sprint 2)
 
-### 7.2 Request flow in general
+![Record remittance](diagrams/png/seq-record-remittance.png)
+
+The remittance and all transactions it creates are saved in one database transaction
+(ADR-0011).
+
+### 7.3 Record a loan part-payment (Sprint 2)
+
+![Record part-payment](diagrams/png/seq-record-part-payment.png)
+
+Interest saved and EMIs saved are calculated by simulating the remaining loan with and without
+the extra payment, then frozen on the payment (ADR-0007).
+
+### 7.4 Request flow in general
 
 1. Browser → nginx (`/api/...`) → gunicorn/Flask.
 2. JWT is verified and the revocation list checked.
 3. The route validates input (marshmallow) and calls a service with the current user's ID.
 4. The service reads/writes through SQLAlchemy inside one database transaction.
-5. Errors leave the API as `{"error": {"code", "message", "details"}}`.
+5. Errors leave the API as `{"error": {"code", "message", "details"}}`; the database session is
+   rolled back, so a failed request never leaves half-saved data.
 
 ## 8. Deployment view
 

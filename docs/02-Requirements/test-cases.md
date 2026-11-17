@@ -4,7 +4,7 @@ Each test case names the requirement it verifies, concrete input values and the 
 behaviour. Automated tests carry the test-case ID in their name (e.g. `test_tc_m01_...`), so every
 row can be found in the code. Status: ✅ passing · ⏳ planned for the sprint shown.
 
-**Sprint 1 totals:** 57 backend tests (service-layer coverage 95 %), 19 frontend tests – all passing.
+**Totals after Sprint 2:** 88 backend tests (service-layer coverage 96 %), 28 frontend tests – all passing.
 
 How to run: `cd backend && pytest` (backend) · `cd frontend && npm test` (frontend).
 
@@ -120,26 +120,76 @@ Performed at the end of Sprint 1 with the production build (Chromium, 1366 × 90
 | TC-E2E01 | Register Ananya → add wallets Home Account (₹350,000), Daily Spending (€0), Blocked Account (€11,904) → 4 INR pre-departure expenses (2 with own rate) → 4 EUR entries → add "Job search" phase → move arrival → dashboard → log out | Balances ₹266,200.00 and €713.30; phases assigned by date; own rates marked as USER, market rates "est." when the provider is unreachable; logged-out message shown | ✅ |
 | TC-U01 (partial) | Dashboard, Transactions, Wallets, Profile at 360 px | No horizontal scrolling | ✅ (0 px overflow) |
 
-## Planned – Sprint 2 (remittances, plan, target, loans, runway)
+## Sprint 2 – Remittances (`test_remittances.py`)
 
-| ID | Requirement | Input | Expected result | Status |
-|---|---|---|---|---|
-| TC-R01 | FR-21 | Sent ₹50,000 from home wallet, received €520 into EUR wallet | Effective rate 0.0104; −₹50,000 and +€520 transactions linked, both TRANSFER kind | ⏳ S2 |
-| TC-R02 | FR-22 | Same, market rate 0.01070 | Hidden cost = 50,000 × 0.0107 − 520 = €15.00 | ⏳ S2 |
-| TC-R03 | FR-27 | Parents send ₹25,000 (no sender wallet), received €250 | One INCOME "Family support" +€250; counts as earned | ⏳ S2 |
-| TC-PL01 | FR-25 | Rent €420, insurance €135, EMI ₹14,000 at 0.00940512 | Target €686.67 | ⏳ S2 |
-| TC-PL02 | FR-24 | Loan with first EMI 2028-04-05 | EMI not in target for 2027-11; included from 2028-04 | ⏳ S2 |
-| TC-TE01 | FR-26 | Nov: target €1,104.67, earned €250 | Still to earn €854.67; 22.6 % | ⏳ S2 |
-| TC-TE02 | FR-27 | Income "Loan disbursement" €3,000 | Earned unchanged | ⏳ S2 |
-| TC-L01 | FR-31 | Outstanding ₹100,000, 12 % p.a., EMI ₹10,000 | Interest ₹1,000.00; principal ₹9,000.00; balance ₹91,000.00 | ⏳ S2 |
-| TC-L02 | FR-32 | Outstanding ₹100,000, 12 %, EMI ₹10,000 | Payoff in 11 months; total future interest ₹5,898.48 (interest rounded to the cent each month) | ⏳ S2 |
-| TC-L03 | FR-32 | Part-payment ₹20,000 on the same loan | Balance ₹80,000; payoff 9 months; interest saved ₹2,088.94 (5,898.48 − 3,809.54); EMIs saved = 2 | ⏳ S2 |
-| TC-L04 | FR-33 | Undo a payment that is not the latest | 409 CONFLICT | ⏳ S2 |
-| TC-L05 | FR-30 | EMI paid from "Home Account – INR" | Wallet expense "Loan EMI" ₹14,000 created and linked | ⏳ S2 |
-| TC-L06 | FR-34 | Avg. surplus €300, buffer 20 %, min part-payment ₹10,000 (≈ €94.05) | Affordable now | ⏳ S2 |
-| TC-L07 | FR-34 | Avg. surplus €50, buffer 20 %, min part-payment €200 | Not affordable; ≈ 5 months of saving | ⏳ S2 |
-| TC-RW01 | FR-35/36 | Balance €613.79; €1,150 spent in last 30 days | 38.33 €/day; 16 days; Critical | ⏳ S2 |
-| TC-RW02 | FR-36 | No spending in last 30 days | Runway "∞"; Healthy | ⏳ S2 |
+Cached test rates: 1 USD = 0.963 EUR = 90 INR, so the market rate INR → EUR is 0.0107.
+
+| ID | Requirement | Input | Expected result | Automated test | Status |
+|---|---|---|---|---|---|
+| TC-R01 | FR-20, FR-21 | Home Account ₹200,000 → Daily Spending €100: sent ₹50,000, received €520 | Effective rate 0.01040000; TRANSFER_OUT ₹50,000 (= €520.00, USER rate), TRANSFER_IN €520 (= ₹50,000.00, rate 96.15384615); balances ₹150,000.00 / €620.00 | `test_tc_r01_...` | ✅ |
+| TC-R02 | FR-22 | Same transfer; again with fee ₹100 | Market rate 0.0107; hidden cost €15.00 (50,000 × 0.0107 − 520); with fee €16.07; fee booked as "Transfer fees"; total €31.07 | `test_tc_r02_...` | ✅ |
+| TC-R03 | FR-20, FR-27 | Parents send ₹25,000 (no sender wallet), €250 received | One INCOME "Family support" €250, home value ₹25,000.00, USER rate | `test_tc_r03_...` | ✅ |
+| TC-R04 | FR-20 | €100 sent home from Daily Spending, ₹9,500 received outside | One EXPENSE "Gifts & family" €100, rate to home 95, home value ₹9,500.00 | `test_tc_r04_...` | ✅ |
+| TC-R05 | FR-18 | €60 from Daily Spending to Savings (same currency) | Rate 1, hidden cost €0.00, TRANSFER_IN + TRANSFER_OUT (not income/expense) | `test_tc_r05_...` | ✅ |
+| TC-R06 | FR-20 | No own wallet; same wallet twice; fee with outside sender; outside sender without currency; income transfer with expense category; amount 0 | 422 each (field errors where applicable) | `test_tc_r06_...` | ✅ |
+| TC-R07 | FR-20 | Edit/delete a transfer's transaction; delete the transfer | 409, 409; 204 – its transactions are gone and balances restored | `test_tc_r07_...` | ✅ |
+
+## Sprint 2 – Monthly Plan and Target to Earn (`test_plan_target.py`)
+
+Rate for EMIs: 1 INR = 0.00940512 EUR.
+
+| ID | Requirement | Input | Expected result | Automated test | Status |
+|---|---|---|---|---|---|
+| TC-PL01 | FR-24, FR-25 | Rent €420, insurance €135, loan EMI ₹14,000 | Minimum target €686.67; EMI line "EMI – SBI education loan" = €131.67 | `test_tc_pl01_...` | ✅ |
+| TC-PL02 | FR-24 | Loan with first EMI 2028-04-05 | Target 2027-11 = €0.00; 2028-04 = €131.67 | `test_tc_pl02_...` | ✅ |
+| TC-PL03 | FR-23 | Semester ticket €58 only during *Study*; laptop €100 until 2026-09-30; month "2026-13" | 2026-05 = €158.00; 2028-01 = €0.00; 422 | `test_tc_pl03_...` | ✅ |
+| TC-PL04 | FR-23, FR-24 | Edit/delete EMI line; plan item with income category; valid_to before valid_from; change rent to €450 | 409, 409; 422; 422; €450.00 | `test_tc_pl04_...` | ✅ |
+| TC-TE01 | FR-26 | Plan €1,104.67 (incl. EMI); this month salary €250, loan disbursement €3,000, rent paid €420 | Target €1,104.67; earned €250.00; still to earn €854.67; 22.6 %; spent €420.00; net −€170.00; rent actual €420.00; 6 history months | `test_tc_te01_...` | ✅ |
+| TC-TE02 | FR-27 | Same – the €3,000 loan disbursement | Not counted as earned | `test_tc_te01_...` | ✅ |
+| TC-TE03 | FR-26 | Plan €420; salary €612.50 | Still to earn €0.00; surplus €192.50 | `test_tc_te03_...` | ✅ |
+| TC-TE04 | FR-26 | EMI ₹14,000 and part-payment ₹20,000 in the same month | EMI line: planned €131.67, actual €131.67 (part-payments are extra, not the plan) | `test_tc_te04_...` | ✅ |
+| TC-PL05 | FR-23 | Month helpers: parse "2026-02", end of Feb 2028, +3 / −1 months, item/phase overlap | 2026-02-01; 2028-02-29; 2027-02-01 / 2025-12-01; correct active flags | `test_pure_month_helpers` | ✅ |
+
+## Sprint 2 – Loans (`test_loans.py`)
+
+| ID | Requirement | Input | Expected result | Automated test | Status |
+|---|---|---|---|---|---|
+| TC-L01 | FR-31 | ₹100,000 at 12 %, EMI ₹10,000; payment ₹500 | Interest ₹1,000.00, principal ₹9,000.00; ₹500 → interest only | `test_tc_l01_...` | ✅ |
+| TC-L01b | FR-30, FR-31 | ₹520,000 at 8.5 %, EMI ₹14,000 paid from Home Account (₹100,000) | Interest ₹3,683.33, principal ₹10,316.67, balance ₹509,683.33; wallet ₹86,000.00 | `test_tc_l01b_...` | ✅ |
+| TC-L02 | FR-32 | ₹100,000 at 12 %, EMI ₹10,000 | 11 months; future interest ₹5,898.48; first row 10,000 / 1,000 / 9,000 / 91,000; EMI = interest → never | `test_tc_l02_...` | ✅ |
+| TC-L03 | FR-32 | Part-payment ₹20,000 on that loan (pure + API) | Balance ₹80,000; interest saved ₹2,088.94; 2 EMIs saved; payoff 9 months; 20 % repaid | `test_tc_l03_...`, `test_tc_l03b_...` | ✅ |
+| TC-L04 | FR-33 | Two EMIs; undo the first; undo the second; delete its wallet expense directly | 409; 204 and balance/wallet restored; 409 | `test_tc_l04_...` | ✅ |
+| TC-L05 | FR-30 | EUR wallet for INR loan; EMI ₹14,000 on ₹10,000 balance; part-payment ₹10,001; payment dated before the last one | 422 each; final payment named (₹10,070.83) | `test_tc_l05_...` | ✅ |
+| TC-L06 | FR-34 | Surplus €300, buffer 20 %, minimum €94.05 | AFFORDABLE, buffered €240.00 | `test_tc_l06_l07_...` | ✅ |
+| TC-L07 | FR-34 | Surplus €50 → minimum €200; surplus −€20 | SAVE, 5 months; NOT_AFFORDABLE | `test_tc_l06_l07_...` | ✅ |
+| TC-L08 | FR-30, FR-24 | Pay the final ₹10,070.83 | Loan CLOSED, 0 months left, EMI line ends this month, next month target €0.00; further payment 409 | `test_tc_l08_...` | ✅ |
+| TC-L09 | FR-29 | Correct outstanding to ₹548,000 and EMI to ₹15,000; delete the loan | Plan for 2028-05 = €141.08; after delete no plan items | `test_tc_l09_...` | ✅ |
+| TC-L10 | FR-34 | Last 3 months: salary €1,000 and rent €700 each; minimum part-payment ₹10,000 | Average surplus €300.00, buffered €240.00, minimum €94.05 → AFFORDABLE; interest saved > 0. 0 % laptop loan €600 / €100 → 6 months, no check | `test_tc_l10_...` | ✅ |
+
+## Sprint 2 – Runway (`test_runway.py`)
+
+| ID | Requirement | Input | Expected result | Automated test | Status |
+|---|---|---|---|---|---|
+| TC-RW01 | FR-35, FR-36 | Balance €613.79; €1,150 spent in 30 days | €38.33/day; 16 days; CRITICAL | `test_tc_rw01_...` | ✅ |
+| TC-RW02 | FR-35 | No spending; negative balance with spending | Unlimited, HEALTHY; 0 days | `test_tc_rw02_...` | ✅ |
+| TC-RW03 | FR-36 | 91 / 90 / 60 / 59 / 30 / 29 / 0 days | HEALTHY / OK / OK / WARNING / WARNING / CRITICAL / CRITICAL | `test_tc_rw03_...` | ✅ |
+| TC-RW04 | FR-35 | Expenses 2 and 20 days ago (€800 + €350), one 40 days ago, €1 transfer to savings | Spent in window €1,150.00 (transfer and old expense ignored); €38.33/day; savings unlimited | `test_tc_rw04_...` | ✅ |
+
+## Sprint 2 – Frontend
+
+| ID | Requirement | Input | Expected result | Automated test | Status |
+|---|---|---|---|---|---|
+| TC-F10 | FR-26 | `addMonths("2026-11", 3)`, `addMonths("2026-01", -1)`, `monthLabel` | "2027-02", "2025-12", "Nov 2026" | `months.test.js` | ✅ |
+| TC-F11 | FR-34 | Affordability card: AFFORDABLE, SAVE (5 months), no minimum | Matching sentence; buffered €240.00 shown; hint to set a minimum | `Sprint2Components.test.jsx` | ✅ |
+| TC-F12 | FR-36 | Runway badge CRITICAL 16 days; HEALTHY no spending | "Critical · 16 days left" (text, not colour only) | `Sprint2Components.test.jsx` | ✅ |
+| TC-F13 | FR-20, FR-22 | Transfer ₹50,000 → €520; "Received from outside" ₹25,000 → €250 | Live preview 1 EUR = 96.15 INR; payloads with both wallets / no sender wallet + sent currency | `RemittanceForm.test.jsx` | ✅ |
+
+## Sprint 2 – Manual end-to-end check (browser)
+
+| ID | Steps | Expected | Result |
+|---|---|---|---|
+| TC-E2E02 | Ananya with 6 months of salary/rent/groceries; plan items; transfer ₹50,000 → €520 (UI); money from family (UI); add SBI loan with minimum part-payment (UI); record EMI and ₹20,000 part-payment (UI); open Plan, Target, Wallets, Dashboard | Loan: interest ₹3,683.33 / principal ₹10,316.67; part-payment saves ₹6,860.63 and 2 EMIs, debt-free moves May 2030 → Mar 2030; EMI line in plan; low-funds alert on dashboard | ✅ |
+| TC-U01 (partial) | All pages at 360 px | No horizontal page scrolling (wide tables scroll inside their card) | ✅ 0 px on all 9 pages |
 
 ## Planned – Sprint 3 (reports, dashboard, quality)
 

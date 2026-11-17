@@ -1,0 +1,32 @@
+@startuml seq-record-part-payment
+title Record a loan part-payment (FR-30 – FR-32, ADR-0007)
+skinparam shadowing false
+autonumber
+
+actor Student
+participant "LoanDetailPage\n(React)" as UI
+participant "loans\nblueprint" as API
+participant "loan_service" as LS
+participant "transaction_service" as TS
+participant "plan_service" as PS
+database "PostgreSQL" as DB
+
+Student -> UI : Part-payment ₹20,000\nfrom Home Account
+UI -> API : POST /loans/{id}/payments\n{PART_PAYMENT, 20000, date, wallet}
+API -> LS : record_payment(user, loan_id, data)
+LS -> DB : loan belongs to user and is ACTIVE?\npayment date ≥ last payment date?
+LS -> LS : amount ≤ outstanding? (else 422)
+LS -> LS : simulate(balance, rate, EMI) → months, interest\nsimulate(balance − 20,000, rate, EMI)
+LS -> LS : interest saved = difference of interest\nEMIs saved = difference of months
+LS -> TS : record EXPENSE "Loan part-payment"\nin Home Account (same currency only)
+TS -> DB : INSERT transaction
+LS -> DB : INSERT loan_payment\n(split and savings frozen)
+LS -> DB : UPDATE loan.outstanding\n(CLOSED when 0)
+LS -> PS : sync_loan_item(loan)
+PS -> DB : UPDATE EMI plan line\n(ends when the loan is closed)
+API -> DB : COMMIT
+API --> UI : 201 payment
+UI -> API : GET /loans/{id}
+API --> UI : summary, new payoff month, affordability
+UI --> Student : "saves ₹6,860.63 · 2 EMIs"
+@enduml

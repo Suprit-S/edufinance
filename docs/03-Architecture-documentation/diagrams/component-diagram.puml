@@ -1,0 +1,100 @@
+@startuml component-diagram
+title EduFinance – Building Block View (UML component diagram)
+skinparam shadowing false
+skinparam componentStyle uml2
+skinparam component {
+  BorderColor #16213B
+  BackgroundColor #FFFFFF
+}
+skinparam package {
+  BorderColor #8A92A3
+}
+
+package "Frontend (React 19 SPA)" {
+  [Pages\n(Dashboard, Wallets, Plan,\nTarget, Loans, Reports, Profile)] as Pages
+  [UI components &\ndesign system] as UI
+  [Auth context] as AuthCtx
+  [API client (Axios)] as Client
+  Pages ..> UI
+  Pages ..> AuthCtx
+  Pages ..> Client
+  AuthCtx ..> Client
+}
+
+package "Backend (Flask)" {
+  interface "REST API\n/api/*" as REST
+
+  package "API layer (blueprints)" {
+    [auth] as RAuth
+    [profile & phases] as RProfile
+    [wallets & transactions] as RWallets
+    [remittances] as RRemit
+    [monthly plan & target] as RPlan
+    [loans] as RLoans
+    [reports & dashboard] as RReports
+    [meta (health, master data)] as RMeta
+  }
+
+  package "Service layer (business logic)" {
+    [AuthService] as SAuth
+    [PhaseService] as SPhase
+    [TransactionService] as STxn
+    [FxService] as SFx
+    [RemittanceService] as SRemit
+    [PlanService] as SPlan
+    [LoanService] as SLoan
+    [RunwayService] as SRunway
+    [ReportService] as SReport
+    [money (Decimal helpers)] as SMoney
+  }
+
+  package "Data layer (SQLAlchemy models)" {
+    [Models] as Models
+    [Alembic migrations] as Alembic
+  }
+
+  REST - RAuth
+  RAuth ..> SAuth
+  RProfile ..> SPhase
+  RWallets ..> STxn
+  RRemit ..> SRemit
+  RPlan ..> SPlan
+  RLoans ..> SLoan
+  RReports ..> SReport
+  RReports ..> SRunway
+  RMeta ..> Models
+
+  STxn ..> SFx
+  STxn ..> SPhase
+  SRemit ..> STxn
+  SRemit ..> SFx
+  SPlan ..> SFx
+  SLoan ..> STxn
+  SLoan ..> SPlan
+  SReport ..> SFx
+  SReport ..> SPlan
+
+  SAuth ..> Models
+  SPhase ..> Models
+  STxn ..> Models
+  SFx ..> Models
+  SPlan ..> Models
+  SLoan ..> Models
+  SReport ..> Models
+  SRunway ..> Models
+  SFx ..> SMoney
+  SLoan ..> SMoney
+  Alembic ..> Models
+}
+
+interface "SQL" as SQL
+interface "HTTPS JSON" as FXI
+database "PostgreSQL 16" as PG
+[Exchange-rate API] as FXAPI <<external>>
+
+Client --( REST
+Models --( SQL
+SQL - PG
+SFx --( FXI
+FXI - FXAPI
+@enduml

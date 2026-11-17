@@ -1,0 +1,112 @@
+/*
+ * EduFinance design tokens.
+ * Every colour, radius and font is a CSS variable, so light/dark mode only
+ * swaps values here. Status colours are always paired with a text label
+ * (never colour alone) for accessibility.
+ */
+:root {
+  /* Typography */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  /* Light theme */
+  --bg: #f4f5f8;
+  --surface: #ffffff;
+  --surface-muted: #f7f8fa;
+  --border: #e3e6ec;
+  --text: #16213b;
+  --text-muted: #5b6478;
+  --text-faint: #8a92a3;
+
+  --sidebar-bg: #16213b;
+  --sidebar-text: #c9cfdc;
+  --sidebar-active: #2e6e5a;
+
+  --accent: #2e6e5a;          /* primary actions, positive values */
+  --accent-hover: #255a4a;
+  --accent-soft: #e5f0ec;
+  --gold: #b9863e;            /* progress, highlights */
+  --gold-soft: #f6eedf;
+  --danger: #b23a48;
+  --danger-soft: #fbe9eb;
+  --warning: #a8650b;
+  --warning-soft: #fdf1dc;
+  --info: #2f5f9e;
+  --info-soft: #e7eef8;
+
+  --focus-ring: 0 0 0 3px rgba(46, 110, 90, 0.35);
+  --shadow-card: 0 1px 2px rgba(22, 33, 59, 0.04), 0 4px 16px rgba(22, 33, 59, 0.05);
+
+  /* Shape & spacing */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 18px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --sidebar-width: 232px;
+  --content-max: 1200px;
+
+  color-scheme: light;
+}
+
+/* Dark theme: follows the OS unless the user picked a theme explicitly. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0f1525;
+    --surface: #182036;
+    --surface-muted: #1d2640;
+    --border: #2a3452;
+    --text: #e8ebf2;
+    --text-muted: #a5adc0;
+    --text-faint: #7a839a;
+    --sidebar-bg: #0b1020;
+    --sidebar-text: #aab2c5;
+    --sidebar-active: #2e6e5a;
+    --accent: #4fae8d;
+    --accent-hover: #63c19f;
+    --accent-soft: #1d3a32;
+    --gold: #d6a65e;
+    --gold-soft: #3a3020;
+    --danger: #e0707d;
+    --danger-soft: #3d2228;
+    --warning: #e3a54a;
+    --warning-soft: #3a2e1a;
+    --info: #7da7e0;
+    --info-soft: #1e2b44;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0f1525;
+  --surface: #182036;
+  --surface-muted: #1d2640;
+  --border: #2a3452;
+  --text: #e8ebf2;
+  --text-muted: #a5adc0;
+  --text-faint: #7a839a;
+  --sidebar-bg: #0b1020;
+  --sidebar-text: #aab2c5;
+  --sidebar-active: #2e6e5a;
+  --accent: #4fae8d;
+  --accent-hover: #63c19f;
+  --accent-soft: #1d3a32;
+  --gold: #d6a65e;
+  --gold-soft: #3a3020;
+  --danger: #e0707d;
+  --danger-soft: #3d2228;
+  --warning: #e3a54a;
+  --warning-soft: #3a2e1a;
+  --info: #7da7e0;
+  --info-soft: #1e2b44;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  color-scheme: dark;
+}

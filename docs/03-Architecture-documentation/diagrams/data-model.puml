@@ -1,0 +1,179 @@
+@startuml data-model
+' EduFinance - logical data model (ER view). Source of truth: backend/app/models
+title EduFinance – Data Model
+hide circle
+hide methods
+skinparam linetype ortho
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #16213B
+  HeaderBackgroundColor #E5F0EC
+  ArrowColor #5B6478
+}
+skinparam packageStyle rectangle
+
+package "Master data" #F6EEDF {
+  entity currencies {
+    * code : CHAR(3) <<PK>>
+    --
+    * name, symbol, minor_units
+  }
+  entity countries {
+    * code : CHAR(2) <<PK>>
+    --
+    * name
+    * default_currency <<FK>>
+  }
+  entity categories {
+    * id : UUID <<PK>>
+    --
+    user_id <<FK>> (NULL = system)
+    * name, kind (INCOME|EXPENSE)
+    * group_name
+    default_phase_type
+    * counts_as_earned : BOOL
+    * is_system : BOOL
+  }
+  entity fx_rates {
+    * id : UUID <<PK>>
+    --
+    * base_currency <<FK>>
+    * quote_currency <<FK>>
+    * rate : NUMERIC(18,8)
+    * rate_date : DATE
+    * source (API|FALLBACK)
+  }
+}
+
+package "User" #E7EEF8 {
+  entity users {
+    * id : UUID <<PK>>
+    --
+    * full_name, email <<UQ>>
+    * password_hash
+    * date_of_birth
+    gender (optional)
+    * home_currency <<FK>>
+    * base_currency <<FK>>
+    * destination_country <<FK>>
+    * planning_start_date
+    * arrival_date
+    * study_start_date
+    * study_end_date
+    * settling_in_days
+  }
+  entity life_phases {
+    * id : UUID <<PK>>
+    --
+    * user_id <<FK>>
+    * phase_type
+    * name
+    * start_date
+    end_date (NULL = open)
+    * is_system
+  }
+  entity revoked_tokens {
+    * jti <<PK>>
+    --
+    * user_id <<FK>>
+    * expires_at
+  }
+}
+
+package "Money" #E5F0EC {
+  entity wallets {
+    * id : UUID <<PK>>
+    --
+    * user_id <<FK>>
+    * name, currency_code <<FK>>
+    * wallet_type
+    * opening_balance : NUMERIC(14,2)
+    * opening_date
+  }
+  entity transactions {
+    * id : UUID <<PK>>
+    --
+    * user_id, wallet_id <<FK>>
+    category_id <<FK>>
+    * kind (INCOME|EXPENSE|TRANSFER_IN|TRANSFER_OUT)
+    * amount, currency_code
+    * txn_date
+    * phase_id <<FK>>, phase_is_manual
+    * rate_to_base, rate_to_home : NUMERIC(18,8)
+    * amount_base, amount_home : NUMERIC(14,2)
+    * rate_source (IDENTITY|USER|LIVE|FALLBACK)
+    remittance_id <<FK>>
+  }
+  entity remittances {
+    * id : UUID <<PK>>
+    --
+    * user_id <<FK>>
+    from_wallet_id <<FK>> (NULL = external)
+    to_wallet_id <<FK>> (NULL = external)
+    * sent_amount, sent_currency
+    * received_amount, received_currency
+    fee_amount, provider
+    * remit_date
+    * effective_rate
+    market_rate, hidden_cost_base
+  }
+}
+
+package "Planning & loans" #FBE9EB {
+  entity monthly_plan_items {
+    * id : UUID <<PK>>
+    --
+    * user_id, category_id <<FK>>
+    * name, amount, currency_code
+    * valid_from, valid_to
+    phase_id <<FK>>
+    loan_id <<FK, UQ>> (EMI line)
+  }
+  entity loans {
+    * id : UUID <<PK>>
+    --
+    * user_id <<FK>>
+    * name, lender, currency_code
+    * annual_rate_pct
+    * sanctioned_amount
+    * outstanding_amount (user-editable)
+    * emi_amount, emi_start_date
+    min_part_payment
+    default_wallet_id <<FK>>
+    * status
+  }
+  entity loan_payments {
+    * id : UUID <<PK>>
+    --
+    * loan_id <<FK>>
+    * payment_type (EMI|PART_PAYMENT)
+    * amount, paid_on
+    * interest_part, principal_part
+    * balance_before, balance_after
+    * interest_saved, emis_saved
+    transaction_id <<FK>>
+  }
+}
+
+countries }o--|| currencies
+users }o--|| currencies : home / base
+users }o--|| countries : destination
+users ||--o{ life_phases
+users ||--o{ revoked_tokens
+users ||--o{ categories : custom
+users ||--o{ wallets
+users ||--o{ remittances
+users ||--o{ loans
+users ||--o{ monthly_plan_items
+wallets ||--o{ transactions
+categories ||--o{ transactions
+life_phases ||--o{ transactions
+remittances |o--o{ transactions : creates 1..2
+monthly_plan_items }o--|| categories
+monthly_plan_items |o--o| loans : EMI
+loans ||--o{ loan_payments
+loan_payments |o--o| transactions : wallet debit
+fx_rates }o--|| currencies
+@enduml
